@@ -1,5 +1,5 @@
 {
-  "name": "my-turborepo",
+  "name": "S-Flow",
   "private": true,
   "scripts": {
     "build": "turbo run build",
