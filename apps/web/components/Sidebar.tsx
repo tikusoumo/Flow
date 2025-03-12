@@ -8,6 +8,7 @@ import {
 import React from "react";
 import Logo from "./Logo";
 import Link from "next/link";
+import { buttonVariants } from "./ui/button";
 
 const routes = [
   {
@@ -45,10 +46,10 @@ export default function DesktopSidebar() {
             <Link
               key={route.href}
               href={route.href}
-              className="flex items-center gap-2 p-3 rounded-md hover:bg-purple-400 hover:font-bold hover:text-amber-50 "
+              className={buttonVariants({})}
             >
               <Icon className="h-5 w-5 " />
-              <span className="hover:w-2">{route.lable}</span>
+              <span className="">{route.lable}</span>
             </Link>
           );
         })}
