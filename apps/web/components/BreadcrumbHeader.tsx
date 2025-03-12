@@ -24,7 +24,7 @@ export default function BreadcrumbHeader() {
               </BreadcrumbItem>
             </React.Fragment>
           ))}
-          ;
+          
         </BreadcrumbList>
       </Breadcrumb>
     </div>
