@@ -3,15 +3,12 @@ import {
   CoinsIcon,
   HomeIcon,
   Layers2Icon,
-  MenuIcon,
   ShieldCheckIcon,
 } from "lucide-react";
 import Logo from "./Logo";
 import Link from "next/link";
-import { Button, buttonVariants } from "./ui/button";
+import { buttonVariants } from "./ui/button";
 import { usePathname } from "next/navigation";
-import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
-import { useState } from "react";
 
 const routes = [
   {
@@ -70,52 +67,4 @@ export default function DesktopSidebar() {
       </div>
     </div>
   );
-}
-
-export function MobileSidebar() {
-  const pathname = usePathname();
-  const activeRoute =
-    routes.find(
-      (route) => route.href.length > 0 && pathname.includes(route.href)
-    ) || routes[0];
-  const [isOpen, setOpen] = useState(false);
-  return (
-    <div className="block border-separate bg-background md:hidden">
-      <nav className="container flex items-center justify-between px-4">
-        <Sheet open={isOpen} onOpenChange={setOpen} >
-          <SheetTrigger asChild>
-            <Button variant={"ghost"} size="icon">
-              <MenuIcon/>
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="w-[400px] sm:w-[540px space-y-4">
-            <div className="flex items-center justify-between px-4 py-2"> 
-
-          <Logo/>
-            </div>
-          <div className="flex flex-col gap-4">
-          {routes.map((route) => {
-          const Icon = route.icon;
-          return (
-            <Link
-              key={route.href}
-              href={route.href}
-              className={buttonVariants({
-                variant:
-                  activeRoute.href === route.href
-                    ? "sidebarItemActive"
-                    : "sidebarItem",
-              })}
-            >
-              <Icon className="h-5 w-5 " />
-              <span className="">{route.lable}</span>
-            </Link>
-          );
-        })}
-          </div>
-          </SheetContent>
-        </Sheet>
-      </nav>
-    </div>
-  )
 }

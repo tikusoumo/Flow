@@ -7,14 +7,12 @@ import {
   BreadcrumbLink,
   BreadcrumbList,
 } from "./ui/breadcrumb";
-import { MobileSidebar } from "@/components/Sidebar";
 
 export default function BreadcrumbHeader() {
   const pathname = usePathname();
   const paths = pathname === "/" ? [""] : pathname.split("/");
   return (
-    <div className="flex items-center gap-2">
-        <MobileSidebar/>
+    <div>
       <Breadcrumb>
         <BreadcrumbList>
           {paths.map((path, index) => (
@@ -26,7 +24,7 @@ export default function BreadcrumbHeader() {
               </BreadcrumbItem>
             </React.Fragment>
           ))}
-          
+          ;
         </BreadcrumbList>
       </Breadcrumb>
     </div>
