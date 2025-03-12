@@ -40,7 +40,7 @@ export default function DesktopSidebar() {
       (route) => route.href.length > 0 && pathname.includes(route.href)
     ) || routes[0];
   return (
-    <div className="hidden lg:flex flex-col w-[250px] bg-white shadow-lg h-screen p-4">
+    <div className="hidden lg:flex flex-col w-[250px] bg-background shadow-lg h-screen p-4">
       <span className="text-2xl font-bold  mb-4">
         <Logo />
       </span>
