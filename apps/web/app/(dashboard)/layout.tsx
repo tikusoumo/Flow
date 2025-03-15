@@ -3,6 +3,8 @@ import DesktopSidebar from "@/components/Sidebar";
 import { ModeToggle } from "@/components/ThemeModeToggle";
 
 import { Separator } from "@/components/ui/separator";
+import { UserButton } from "@clerk/nextjs";
+
 
 import React from "react";
 
@@ -16,7 +18,9 @@ export default function layout({ children }: { children: React.ReactNode }) {
           <BreadcrumbHeader />
           <div className="flex items-center gap-4">
             <ModeToggle />
+            <UserButton/>
           </div>
+      
         </header>
         <Separator />
       </div>
