@@ -8,7 +8,7 @@ import { UserButton } from "@clerk/nextjs";
 
 import React from "react";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 export default function layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex h-screen ">
@@ -23,6 +23,9 @@ export default function layout({ children }: { children: React.ReactNode }) {
       
         </header>
         <Separator />
+        <div className="container flex-1 overflow-hidden">
+          {children}
+        </div>
       </div>
     </div>
   );
