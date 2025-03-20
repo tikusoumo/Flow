@@ -15,7 +15,7 @@ datasource db {
 
 model Workflow{
   id        String   @id @default(cuid())
-  UserId     String
+  userId     String
   name      String
   description String?
   status    String
@@ -24,7 +24,7 @@ model Workflow{
   updatedAt DateTime @updatedAt
  
  //use can not have multiple workflows with the same name
-  @@unique([UserId, name])
+  @@unique([userId, name])
   //use can not have multiple workflows with the same definition
-  @@unique([UserId, definition])
+  @@unique([userId, definition])
 }

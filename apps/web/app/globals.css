@@ -74,7 +74,7 @@
 }
 
 .dark {
-  --background: hsl(224, 71.4%, 4.1%);
+  --background: hsl(200, 6%, 10%);
   --foreground: hsl(210, 20%, 98%);
   --card: hsl(224, 71.4%, 4.1%);
   --card-foreground: hsl(210, 20%, 98%);
@@ -88,7 +88,7 @@
   --muted-foreground: hsl(217.9, 10.6%, 64.9%);
   --accent: hsl(215, 27.9%, 16.9%);
   --accent-foreground: hsl(210, 20%, 98%);
-  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive: hsl(0, 100%, 68%);
   --destructive-foreground: hsl(210, 20%, 98%);
   --border: hsl(215, 27.9%, 16.9%);
   --input: hsl(215, 27.9%, 16.9%);
