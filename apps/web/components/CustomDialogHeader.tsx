@@ -24,7 +24,7 @@ export default function CustomDialogHeader(props: CustomDialogHeaderProps) {
             />
           )}
           {props.title && (
-            <h1 className={cn("text-xl text-primary", props.titleClassName)}>
+            <h1 className={cn("text-xl text-white", props.titleClassName)}>
               {props.title}
             </h1>
           )}

@@ -1,4 +1,4 @@
-import getWorkflowsForUsers from "@/actions/getWorkflowsForUsers";
+import getWorkflowsForUsers from "@/actions/workflows/getWorkflowsForUsers";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AlertCircle, InboxIcon } from "lucide-react";
@@ -70,5 +70,5 @@ async function UserWorkflows() {
       </div>
     );
   }
-  return <div></div>;
+  return <pre>{JSON.stringify(workflows,null,4)}</pre>;
 }
