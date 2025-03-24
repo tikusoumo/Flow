@@ -79,18 +79,18 @@ export default function WorkFlowCard({ workflow }: { workflow: Workflow }) {
             <PencilIcon className="h-4 w-4" />
             Edit
           </Link>
-          <WorkflowActions workflowName={workflow.name} />
+          <WorkflowActions workflowName={workflow.name} workflowId={workflow.id} />
         </div>
       </CardContent>
     </Card>
   );
 }
 
-function WorkflowActions({workflowName}: {workflowName: string}) {
+function WorkflowActions({workflowName,workflowId}: {workflowName: string,workflowId: string}) {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   return (
     <>
-    <DeleteWorkflowDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} workflowName={workflowName} />
+    <DeleteWorkflowDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} workflowName={workflowName} workflowId={workflowId} />
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="sm">

@@ -43,7 +43,12 @@ export default function CreateWorkflowDialog({
     onSuccess: () => {
       toast.success("Workflow created successfully", { id: "create-workflow" });
     },
-    onError: () => {
+    onError: (error) => {
+      // If error contains redirect info, it's actually successful
+      if (error instanceof Error && error.message.includes("NEXT_REDIRECT")) {
+        toast.success("Workflow created successfully", { id: "create-workflow" });
+        return;
+      }
       toast.error("Error creating workflow", { id: "create-workflow" });
     },
   });

@@ -1,40 +1,88 @@
-import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import React, { useState } from 'react'
+import DeleteWorkflow from "@/actions/workflows/DeleteWorkflow";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useMutation } from "@tanstack/react-query";
+import React, { useState } from "react";
+import { toast } from "sonner";
 
 interface Prop {
-    open:boolean
-    setOpen:(open:boolean)=>void
-    workflowName:string
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  workflowName: string;
+  workflowId: string;
 }
 
-export default function DeleteWorkflowDialog({open,setOpen,workflowName}:Prop) {
-    const [confirmName, setConfirmName] = useState("")
+export default function DeleteWorkflowDialog({
+  open,
+  setOpen,
+  workflowName,
+  workflowId,
+}: Prop) {
+  const [confirmName, setConfirmName] = useState("");
+  const deleteMutation = useMutation({
+    mutationFn: DeleteWorkflow,
+    onSuccess: () => {
+      toast.success("Workflow deleted successfully", { id: workflowId });
+      setConfirmName("");
+    },
+    onError: () => {
+      toast.error("Error deleting workflow", { id: workflowId });
+    },
+  });
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
-        <AlertDialogContent>
-            <AlertDialogHeader>
-                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            </AlertDialogHeader>
-            <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete your workflow and all of its data.
-            </AlertDialogDescription>
-            <div className='flex'>
-                <p>
-                    If you are sure enter <b className='text-destructive'>{workflowName}</b> to confirm
-                </p>
-            </div>
-            <Input className='mt-2' placeholder={"Enter your workflow name"} value={confirmName} onChange={(e)=>setConfirmName(e.target.value)} />
-            <div className='flex  justify-end mt-4'>
-                <Button variant='destructive' className='mr-2' disabled={confirmName !== workflowName} onClick={() => setOpen(false)}>
-                    Confirm
-                </Button>
-                <Button className='' variant={'outline'} onClick={() => setOpen(false)}>
-                    Cancel
-                </Button>
-            </div>
-        </AlertDialogContent>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+        </AlertDialogHeader>
+        <AlertDialogDescription>
+          This action cannot be undone. This will permanently delete your
+          workflow and all of its data.
+        </AlertDialogDescription>
+        <div className="flex">
+          <p>
+            If you are sure enter{" "}
+            <b className="text-destructive">{workflowName}</b> to confirm
+          </p>
+        </div>
+        <Input
+          className="mt-2"
+          placeholder={"Enter your workflow name"}
+          value={confirmName}
+          onChange={(e) => setConfirmName(e.target.value)}
+        />
+        <div className="flex  justify-end mt-4">
+          <Button
+            className="mr-2"
+            variant={"outline"}
+            onClick={() =>{ setOpen(false)
+              setConfirmName("")
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="destructive"
+            className=""
+            disabled={confirmName !== workflowName || deleteMutation.isPending}
+            onClick={() => {
+             
+              toast.loading("Deleting workflow...", { id: workflowId });
+              deleteMutation.mutate(workflowId);
+              setOpen(false);
+            }}
+          >
+            Delete
+          </Button>
+        </div>
+      </AlertDialogContent>
     </AlertDialog>
-  )
+  );
 }
