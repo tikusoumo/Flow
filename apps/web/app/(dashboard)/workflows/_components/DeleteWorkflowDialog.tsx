@@ -1,7 +1,7 @@
 import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
-import React from 'react'
+import { Input } from '@/components/ui/input'
+import React, { useState } from 'react'
 
 interface Prop {
     open:boolean
@@ -10,6 +10,7 @@ interface Prop {
 }
 
 export default function DeleteWorkflowDialog({open,setOpen,workflowName}:Prop) {
+    const [confirmName, setConfirmName] = useState("")
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
         <AlertDialogContent>
@@ -21,12 +22,12 @@ export default function DeleteWorkflowDialog({open,setOpen,workflowName}:Prop) {
             </AlertDialogDescription>
             <div className='flex'>
                 <p>
-                    If you are sure enter <b className='text-destructive'>{workflowName}</b>
+                    If you are sure enter <b className='text-destructive'>{workflowName}</b> to confirm
                 </p>
             </div>
-            <Textarea className='resize-none'></Textarea>
+            <Input className='mt-2' placeholder={"Enter your workflow name"} value={confirmName} onChange={(e)=>setConfirmName(e.target.value)} />
             <div className='flex  justify-end mt-4'>
-                <Button variant='destructive' className='mr-2'>
+                <Button variant='destructive' className='mr-2' disabled={confirmName !== workflowName} onClick={() => setOpen(false)}>
                     Confirm
                 </Button>
                 <Button className='' variant={'outline'} onClick={() => setOpen(false)}>
