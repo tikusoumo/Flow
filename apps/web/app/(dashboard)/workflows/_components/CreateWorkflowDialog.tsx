@@ -3,7 +3,10 @@ import CustomDialogHeader from "@/components/CustomDialogHeader";
 import { Button } from "@/components/ui/button";
 import { DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
-import { createWorkflowSchema, CreateWorkflowSchemaType } from "@/schema/workflow";
+import {
+  CreateWorkflowSchema,
+  CreateWorkflowSchemaType,
+} from "@/schema/workflow";
 import { Dialog } from "@radix-ui/react-dialog";
 import { Layers2Icon, Loader2 } from "lucide-react";
 import { useCallback, useState } from "react";
@@ -22,7 +25,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useMutation } from "@tanstack/react-query";
-import { CreateWorkflow } from "@/actions/workflows/createWorkflows";
+import { CreateWorkflow } from "@/actions/workflows/CreateWorkflows";
 import { toast } from "sonner";
 export default function CreateWorkflowDialog({
   triggerText,
@@ -31,28 +34,37 @@ export default function CreateWorkflowDialog({
 }) {
   const [open, setOpen] = useState(false);
   const form = useForm<CreateWorkflowSchemaType>({
-    resolver: zodResolver(createWorkflowSchema),
+    resolver: zodResolver(CreateWorkflowSchema),
     defaultValues: {},
   });
 
-  const {mutate,isPending} = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: CreateWorkflow,
     onSuccess: () => {
-      toast.success("Workflow created successfully",{id:"create-workflow"})   
+      toast.success("Workflow created successfully", { id: "create-workflow" });
     },
     onError: () => {
-      toast.error("Error creating workflow",{id:"create-workflow"})
+      toast.error("Error creating workflow", { id: "create-workflow" });
     },
-  })
+  });
 
-  const onSubmit = useCallback((values:CreateWorkflowSchemaType)=> {
-    toast.loading("Creating workflow...",{id:"create-workflow"})
-    mutate(values)
-  },[mutate])
+  const onSubmit = useCallback(
+    (values: CreateWorkflowSchemaType) => {
+      toast.loading("Creating workflow...", { id: "create-workflow" });
+      mutate(values);
+    },
+    [mutate]
+  );
 
   return (
     <>
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog
+        open={open}
+        onOpenChange={(open) => {
+          form.reset();
+          setOpen(open);
+        }}
+      >
         <DialogTrigger asChild>
           <Button variant="default">{triggerText ?? "Create Workflow"}</Button>
         </DialogTrigger>
@@ -65,7 +77,10 @@ export default function CreateWorkflowDialog({
           <Separator className="my-2" />
           <div className="p-6">
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-4"
+              >
                 <FormField
                   control={form.control}
                   name="name"
@@ -105,8 +120,9 @@ export default function CreateWorkflowDialog({
                         />
                       </FormControl>
                       <FormDescription className="pb-10">
-                        Provide a short description of your workflow. This will help you
-                        remember what this workflow does. It should be less than 80 characters.
+                        Provide a short description of your workflow. This will
+                        help you remember what this workflow does. It should be
+                        less than 80 characters.
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -115,7 +131,7 @@ export default function CreateWorkflowDialog({
                 <Button type="submit" className="w-full" disabled={isPending}>
                   {!isPending && "Proceed"}
                   {isPending && <Loader2 className="animate-spin" />}
-                  </Button>
+                </Button>
               </form>
             </Form>
           </div>
