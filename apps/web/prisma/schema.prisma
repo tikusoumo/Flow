@@ -26,5 +26,5 @@ model Workflow{
  //use can not have multiple workflows with the same name
   @@unique([userId, name])
   //use can not have multiple workflows with the same definition
-  @@unique([userId, definition])
+  // @@unique([userId, definition])
 }
