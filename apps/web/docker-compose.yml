@@ -1,0 +1,23 @@
+services:
+  db:
+    image: postgres:latest
+    container_name: postgres_flowdb_2
+    restart: always
+    environment:
+      POSTGRES_DB: FlowDB
+      POSTGRES_USER: Tiku
+      POSTGRES_PASSWORD: tiku1234
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer
+    container_name: adminer_flowdb_2
+    restart: always
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_data:
