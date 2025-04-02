@@ -9,16 +9,24 @@ import {
   Background,
   BackgroundVariant,
   useReactFlow,
+  Connection,
+  addEdge,
+  Edge,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import NodeComponent from "./nodes/NodeComponent";
 import { useCallback, useEffect } from "react";
-import { CreateWorkflowNode } from "@/lib/workflow/createWorkflowNode";
+import { CreateWorkflowNode } from "@/lib/workflow/CreateWorkflowNode";
 import { TaskType } from "@/types/task";
 import { AppNode } from "@/types/appNode";
+import DeletableEdge from "./edges/DeletableEdge";
 
 const nodeTypes = {
   FlowNode: NodeComponent,
+};
+
+const edgeTypes = {
+  default: DeletableEdge,
 };
 
 const snapGrid: [number, number] = [15, 15];
@@ -26,7 +34,7 @@ const fitViewOptions = { padding: 1 };
 
 export default function FlowEditor({ workflow }: { workflow: Workflow }) {
   const [nodes, setNodes, onNodeChange] = useNodesState<AppNode>([]);
-  const [edges, setEdges, onEdgeChange] = useEdgesState([]);
+  const [edges, setEdges, onEdgeChange] = useEdgesState<Edge>([]);
   const { setViewport, screenToFlowPosition } = useReactFlow();
 
   useEffect(() => {
@@ -59,7 +67,13 @@ export default function FlowEditor({ workflow }: { workflow: Workflow }) {
       const newNode = CreateWorkflowNode(taskType as TaskType, position);
       setNodes((nds) => nds.concat(newNode));
     },
-    [setNodes]
+    [setNodes, screenToFlowPosition]
+  );
+  const onConnect = useCallback(
+    (connection: Connection) => {
+      setEdges((eds) => addEdge({ ...connection, animated: true }, eds));
+    },
+    [setEdges]
   );
 
   return (
@@ -70,12 +84,14 @@ export default function FlowEditor({ workflow }: { workflow: Workflow }) {
         onNodesChange={onNodeChange}
         onEdgesChange={onEdgeChange}
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         snapToGrid
         snapGrid={snapGrid}
         fitViewOptions={fitViewOptions}
         fitView
         onDragOver={onDragOver}
         onDrop={onDrop}
+        onConnect={onConnect}
       >
         <Controls position="top-left" fitViewOptions={fitViewOptions} />
         <Background variant={BackgroundVariant.Dots} gap={10} size={1} />

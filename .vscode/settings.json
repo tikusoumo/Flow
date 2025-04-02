@@ -6,7 +6,9 @@
   ],
   "cSpell.words": [
     "cuid",
+    "Instace",
     "lable",
     "xyflow"
-  ]
+  ],
+  "postman.settings.dotenv-detection-notification-visibility": false
 }

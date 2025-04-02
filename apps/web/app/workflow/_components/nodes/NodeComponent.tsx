@@ -20,7 +20,7 @@ const NodeComponent = memo((props: NodeProps) => {
       </NodeInputs>
       <NodeOutputs>
         {task.outputs.map((output) => (
-          <NodeOutput key={output.name} output={output} nodeId={props.id} />
+          <NodeOutput key={output.name} output={output} />
         ))}
       </NodeOutputs>
     </NodeCard>
