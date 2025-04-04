@@ -12,7 +12,7 @@ import React from "react";
 
 export default function TaskMenu() {
   return (
-    <aside className="w-[340px] min-w-[340px] max-w-[340px] px-4 h-full bg-gray-100 border-r border-gray-300 p-2 overflow-auto">
+    <aside className="w-[340px] min-w-[340px] max-w-[340px] px-4 h-full bg-white border-l border-gray-300 p-2 overflow-auto">
       <Accordion type="multiple" className="w-full">
         <AccordionItem value="Extraction">
           <AccordionTrigger className="text-lg font-semibold">
@@ -20,6 +20,7 @@ export default function TaskMenu() {
           </AccordionTrigger>
           <AccordionContent className="flex flex-col gap-2">
             <TaskMenuBtn taskType={TaskType.PAGE_TO_HTML} />
+            <TaskMenuBtn taskType={TaskType.EXTRACT_TEXT_FROM_ELEMENT} />
           </AccordionContent>
         </AccordionItem>
       </Accordion>
@@ -42,7 +43,7 @@ function TaskMenuBtn({ taskType }: { taskType: TaskType }) {
       onDragStart={(event) => onDragStart(event, taskType)}
     >
       <div className="flex items-center gap-2">
-        <task.icon className="w-4 h-4" />
+        <task.icon size={20} />
         {task.label}
       </div>
     </Button>

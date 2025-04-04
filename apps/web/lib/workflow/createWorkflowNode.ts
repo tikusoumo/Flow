@@ -12,7 +12,7 @@ export function CreateWorkflowNode(
     dragHandle: ".drag-handle",
     data: {
       type: nodeType,
-      input: {},
+      inputs: {},
     },
   };
 }

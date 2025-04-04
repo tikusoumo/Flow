@@ -9,7 +9,7 @@ import {
 } from "@/schema/workflow";
 import { Dialog } from "@radix-ui/react-dialog";
 import { Layers2Icon, Loader2 } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -53,13 +53,12 @@ export default function CreateWorkflowDialog({
     },
   });
 
-  const onSubmit = useCallback(
+  const onSubmit = 
     (values: CreateWorkflowSchemaType) => {
       toast.loading("Creating workflow...", { id: "create-workflow" });
       mutate(values);
-    },
-    [mutate]
-  );
+    }
+    
 
   return (
     <>

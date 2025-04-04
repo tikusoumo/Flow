@@ -1,5 +1,5 @@
 import { TaskParam, TaskParamType } from "@/types/task";
-import React, { useCallback } from "react";
+import React from "react";
 import StringParam from "./param/StringParam";
 import { useReactFlow } from "@xyflow/react";
 import { AppNode } from "@/types/appNode";
@@ -8,14 +8,16 @@ import BrowserInstanceParam from "./param/BrowserInstanceParam";
 export default function NodeParamField({
   param,
   nodeId,
+  disabled,
 }: {
   param: TaskParam;
   nodeId: string;
+  disabled?: boolean;
 }) {
   const { updateNodeData, getNode } = useReactFlow();
   const node = getNode(nodeId) as AppNode;
   const value = node?.data.inputs?.[param.name];
-  const updateNodeParamValue = useCallback(
+  const updateNodeParamValue = 
     (newValue: string) => {
       updateNodeData(nodeId, {
         inputs: {
@@ -23,9 +25,7 @@ export default function NodeParamField({
           [param.name]: newValue,
         },
       });
-    },
-    [nodeId, updateNodeData, param.name, node?.data.inputs]
-  );
+    }
 
   switch (param.type) {
     case TaskParamType.STRING:
@@ -34,6 +34,7 @@ export default function NodeParamField({
           param={param}
           value={value}
           updateNodeParamValue={updateNodeParamValue}
+          disabled={disabled}
         />
       );
     case TaskParamType.BROWSER_INSTANCE:
