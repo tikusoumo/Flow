@@ -27,4 +27,40 @@ model Workflow{
   @@unique([userId, name])
   //use can not have multiple workflows with the same definition
   // @@unique([userId, definition])
+  executions WorkflowExecution[]
+}
+
+model WorkflowExecution{
+ 
+  
+  id        String   @id @default(cuid())
+  workflowId String
+  userId     String
+  status    String
+  trigger   String 
+  createdAt DateTime @default(now())
+  startedAt DateTime?
+  finishedAt DateTime?
+  phases   ExecutionPhase[]
+  workflow   Workflow @relation(fields: [workflowId], references: [id],onDelete: Cascade)
+
+
+  
+}
+
+model ExecutionPhase{
+  id        String   @id @default(cuid())
+  userId     String
+  number    Int
+  node      String
+  name     String
+  workflowExecutionId String
+  status    String
+  createdAt DateTime @default(now())
+  startedAt DateTime?
+  inputs  String?
+  outputs String?
+  creditsCost Int?
+  execution WorkflowExecution @relation(fields: [workflowExecutionId], references: [id], onDelete: Cascade)
+ 
 }
