@@ -1,4 +1,4 @@
-import { AppNode } from "@/types/appNode";
+import { AppNode, AppNodeMissingInputs } from "@/types/appNode";
 import {
   WorkFlowExecutionPlan,
   WorkFlowExecutionPlanPhase,
@@ -6,8 +6,18 @@ import {
 import { Edge, getIncomers } from "@xyflow/react";
 import { TaskRegistry } from "./task/registry";
 
-interface FlowToExecutionPlanType {
+export enum FlowToExecutionPlanValidationError {
+  INVALID_INPUTS = "INVALID_INPUTS",
+  NO_ENTRY_POINT = "NO_ENTRY_POINT",
+}
+
+
+type FlowToExecutionPlanType =  {
   executionPlan?: WorkFlowExecutionPlan;
+  error?: {
+    type: FlowToExecutionPlanValidationError;
+    invalidElements?: AppNodeMissingInputs[];
+  }
 }
 
 export function FlowToExecutionPlan(
@@ -18,9 +28,23 @@ export function FlowToExecutionPlan(
     (currentNode) => TaskRegistry[currentNode.data.type].isEntryPoint
   );
   if (!entryPoint) {
-    throw new Error("TODO: Error handling");
+    return {
+      error: {
+        type: FlowToExecutionPlanValidationError.NO_ENTRY_POINT,
+      },
+    };
   }
+  const inputsWithErrors : AppNodeMissingInputs[] = []
   const planned = new Set<string>();
+
+const invalidInputs = getInvalidInputs(entryPoint, edges, planned);
+  if (invalidInputs.length > 0) {
+    inputsWithErrors.push({
+      nodeId: entryPoint.id,
+      inputs: invalidInputs,
+    });
+  }
+
   const executionPlan: WorkFlowExecutionPlan = [
     {
       phase: 1,
@@ -51,7 +75,10 @@ export function FlowToExecutionPlan(
             currentNode.id,
             invalidInputs
           );
-          throw new Error("TODO: Error handling");
+          inputsWithErrors.push({
+            nodeId: currentNode.id,
+            inputs: invalidInputs,
+          });
         } else {
           continue;
         }
@@ -63,6 +90,14 @@ export function FlowToExecutionPlan(
       planned.add(node.id);
     }
     executionPlan.push(nextPhase);
+  }
+  if (inputsWithErrors.length > 0) {
+    return {
+      error: {
+        type: FlowToExecutionPlanValidationError.INVALID_INPUTS,
+        invalidElements: inputsWithErrors,
+      },
+    };
   }
   return { executionPlan };
 }

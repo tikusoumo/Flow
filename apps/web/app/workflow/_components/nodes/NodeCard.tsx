@@ -1,5 +1,6 @@
 "use client";
 
+import useFlowValidation from "@/hooks/useFlowValidation";
 import { cn } from "@/lib/utils";
 import { useReactFlow } from "@xyflow/react";
 
@@ -14,6 +15,8 @@ export default function NodeCard({
   isSelected: boolean;
 }) {
   const { getNode, setCenter } = useReactFlow();
+  const { invalidInputs } = useFlowValidation();
+  const hasInvalidInputs = invalidInputs.some((input) => input.nodeId === nodeId);
   
  
   const handleDoubleClick = () => {
@@ -51,7 +54,8 @@ export default function NodeCard({
        // Also prevent single clicks from bubbling
       className={cn(
         "w-[420px] rounded-md flex flex-col gap-1 text-xs border-2 border-separate bg-background cursor-pointer",
-        isSelected && "border-primary"
+        isSelected && "border-primary",
+        hasInvalidInputs && "border-destructive border-2 ",
       )}
     >
       {children}

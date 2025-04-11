@@ -4,6 +4,7 @@ import React from "react";
 import NodeParamField from "./NodeParamField";
 import { cn } from "@/lib/utils";
 import { ColorForHandle } from "./Common";
+import useFlowValidation from "@/hooks/useFlowValidation";
 
 export function NodeInputs({ children }: { children: React.ReactNode }) {
   return <div className="flex flex-col gap-2 p-2 divide-y ">{children}</div>;
@@ -19,9 +20,11 @@ export function NodeInput({
 
   const edges = useEdges();
   const isConnected = edges.some((edge) => edge.target === nodeId && edge.targetHandle === input.name);
+  const {invalidInputs} = useFlowValidation()
+  const hasErrors = invalidInputs.find((node) => node.nodeId === nodeId)?.inputs.find((invalidInput) => invalidInput === input.name)
 
   return (
-    <div className="flex justify-start relative p-3 bg-secondary w-full">
+    <div className={cn("flex justify-start relative p-3 bg-secondary w-full", hasErrors && "bg-destructive/30")}>
       <NodeParamField param={input} nodeId={nodeId} disabled={isConnected}/>
 
       {!input.hideHandle && (
