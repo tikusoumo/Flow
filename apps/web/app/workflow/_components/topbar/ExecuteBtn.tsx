@@ -15,8 +15,16 @@ export default function ExecuteBtn({ workflowId }: { workflowId: string }) {
     onSuccess: () => {
       toast.success("Execution started", { id: "flow-execution" });
     },
-    onError: () => {
-      toast.error("Execution failed", { id: "flow-execution" });
+    onError: (error) => {
+       // Check if the error is the special redirect error
+       if (error instanceof Error && error.message.includes("NEXT_REDIRECT")) {
+        // It's a redirect, which means the action was successful.
+        // We can optionally show the success toast here or just let the redirect happen.
+        toast.success("Execution started, redirecting...", { id: "flow-execution" });
+        return; // Don't show the failure toast
+      }
+      // Otherwise, it's a real error
+      toast.error("Execution failed: " + error.message, { id: "flow-execution" });
     },
   });
 

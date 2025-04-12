@@ -1,6 +1,5 @@
 "use client";
 
-import { CreateWorkflow } from "@/actions/workflows/CreateWorkflows";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CreateWorkflowNode } from "@/lib/workflow/CreateWorkflowNode";
@@ -24,7 +23,7 @@ export default function NodeHeader({ taskType,nodeId }: { taskType: TaskType ; n
           {task.isEntryPoint && <Badge>Trigger</Badge>}
           <Badge className="flex items-center text-xs gap-2">
             <CoinsIcon size={12} className="text-white" />
-            TODO
+            {task.credits}
           </Badge>
           {!task.isEntryPoint && <>
           <Button variant={'ghost'} size={'icon'}
