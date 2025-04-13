@@ -1,3 +1,4 @@
+
 import { GetWorkflowExecutionWithPhases } from "@/actions/workflows/GetWorkflowExecutionWithPhases";
 import TopBar from "@/app/workflow/_components/topbar/TopBar";
 
@@ -8,14 +9,17 @@ import ExecutionViewer from "./_components/ExecutionViewer";
 export default async function ExecutionViewerPage({
   params,
 }: {
-  params: { workflowid: string; executionid: string };
+  params: Promise<{ workflowid: string; executionid: string }>;
 }) {
+ 
+  const { workflowid, executionid } = await params;
+
   return (
     <div className="flex flex-col h-screen overflow-hidden w-full">
       <TopBar
-        workflowId={params.workflowid}
+        workflowId={workflowid}
         title="Execution Details"
-        subtitle={`RunId: ${params.executionid}`}
+        subtitle={`RunId: ${executionid}`}
         hideButtons
       />
       <section className="flex flex-col h-full w-full overflow-hidden">
@@ -24,7 +28,7 @@ export default async function ExecutionViewerPage({
                 <LoaderCircle className="animate-spin stroke-primary " size={40} />
             </div>
         }>
-          <ExecutionViewerWrapper executionid={params.executionid} />
+          <ExecutionViewerWrapper executionid={executionid} />
         </Suspense>
       </section>
     </div>

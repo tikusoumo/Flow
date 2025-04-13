@@ -5,7 +5,7 @@ import React from 'react'
 import Editor from '../../_components/Editor';
 
 export default async function page({params}: {params: {workflowId: string}}) {
-    const { workflowId } = params;
+    const { workflowId } = await params;
     const { userId } = await auth();
     if (!userId) {
         return <div>Unauthorized</div>;

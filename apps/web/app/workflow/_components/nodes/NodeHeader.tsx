@@ -39,7 +39,7 @@ export default function NodeHeader({ taskType,nodeId }: { taskType: TaskType ; n
           onClick={() => {
             const node = getNode(nodeId) as AppNode;
             const newX = node.position.x ;
-            const newY = node.position.y + node.measured.height + 20;
+            const newY = node.position.y + (node.measured?.height || 100) + 20;
             const newNode = CreateWorkflowNode(node?.data.type,{
               x: newX,
               y: newY,

@@ -13,54 +13,55 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Workflow{
-  id        String   @id @default(cuid())
-  userId     String
-  name      String
-  description String?
-  status    String
+model Workflow {
+  id            String    @id @default(cuid())
+  userId        String
+  name          String
+  description   String?
+  status        String
+  lastRunAt     DateTime?
+  lastRunStatus String?
+  lastRunId     String?
+
   definition String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
- 
- //use can not have multiple workflows with the same name
-  @@unique([userId, name])
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
   //use can not have multiple workflows with the same definition
   // @@unique([userId, definition])
   executions WorkflowExecution[]
+
+  //use can not have multiple workflows with the same name
+  @@unique([userId, name])
 }
 
-model WorkflowExecution{
- 
-  
-  id        String   @id @default(cuid())
+model WorkflowExecution {
+  id         String           @id @default(cuid())
   workflowId String
   userId     String
-  status    String
-  trigger   String 
-  createdAt DateTime @default(now())
-  startedAt DateTime?
+  status     String
+  trigger    String
+  createdAt  DateTime         @default(now())
+  startedAt  DateTime?
   finishedAt DateTime?
-  phases   ExecutionPhase[]
-  workflow   Workflow @relation(fields: [workflowId], references: [id],onDelete: Cascade)
+  creditsConsumed     Int? @default(0)
 
-
-  
+  phases     ExecutionPhase[]
+  workflow   Workflow         @relation(fields: [workflowId], references: [id], onDelete: Cascade)
 }
 
-model ExecutionPhase{
-  id        String   @id @default(cuid())
-  userId     String
-  number    Int
-  node      String
-  name     String
+model ExecutionPhase {
+  id                  String            @id @default(cuid())
+  userId              String
+  number              Int
+  node                String
+  name                String
   workflowExecutionId String
-  status    String
-  createdAt DateTime @default(now())
-  startedAt DateTime?
-  inputs  String?
-  outputs String?
-  creditsCost Int?
-  execution WorkflowExecution @relation(fields: [workflowExecutionId], references: [id], onDelete: Cascade)
- 
+  status              String
+  createdAt           DateTime          @default(now())
+  startedAt           DateTime?
+  finishedAt          DateTime?
+  inputs              String?
+  outputs             String?
+  creditsConsumed     Int?
+  execution           WorkflowExecution @relation(fields: [workflowExecutionId], references: [id], onDelete: Cascade)
 }
