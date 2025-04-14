@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DatesToDurationString } from "@/lib/helper/dates";
 import { GetPhaseTotalCost } from "@/lib/helper/phases";
-import { GetWorkflowPhaseDetails } from "@/actions/workflows/GetWorflowPhaseDetails.";
+import { GetWorkflowPhaseDetails } from "@/actions/workflows/GetWorkflowPhaseDetails.";
 
 type ExecutionData = Awaited<ReturnType<typeof GetWorkflowExecutionWithPhases>>;
 
@@ -27,8 +27,6 @@ export default function ExecutionViewer({
 }: {
   initialData: ExecutionData;
 }) {
-
-
   const [selectedPhase, setSelectedPhase] = useState<string | null>(null);
 
   const query = useQuery({
@@ -44,7 +42,7 @@ export default function ExecutionViewer({
     queryKey: ["phaseDetails", selectedPhase],
     enabled: selectedPhase !== null,
     queryFn: () => GetWorkflowPhaseDetails(selectedPhase!),
-  })
+  });
 
   const duration = DatesToDurationString(
     query.data?.finishedAt,
@@ -105,9 +103,9 @@ export default function ExecutionViewer({
             <Button
               key={index}
               className="w-full justify-between"
-              variant={selectedPhase===phase.id?"secondary":"ghost"}
+              variant={selectedPhase === phase.id ? "secondary" : "ghost"}
               onClick={() => {
-                if(isRunning) return;
+                if (isRunning) return;
                 setSelectedPhase(phase.id);
               }}
             >
@@ -120,10 +118,43 @@ export default function ExecutionViewer({
           ))}
         </div>
       </aside>
-      <div className="flex w-full h-full">
-        <pre>
-          {JSON.stringify(phaseDetails.data, null, 2)}
-        </pre>
+      <div className="flex w-full h-full px-4">
+        {isRunning && (
+          <div className="flex items-center justify-center flex-col gap-2 w-full h-full">
+            <div className="font-bold"></div>
+          </div>
+        )}
+        {!isRunning && !selectedPhase && (
+          <div className="flex items-center justify-center flex-col gap-2 w-full h-full">
+            <div className="font-bold">No phase selected</div>
+            <div className="text-sm text-muted-foreground">
+              Select a phase to see the details
+            </div>
+          </div>
+        )}
+       
+        {!isRunning && selectedPhase && phaseDetails.data && (
+          <div className="flex flex-col py-4 container gap-4 overflow-auto">
+            <div className="flex gap-2 items-center">
+              <Badge variant="outline" className="space-x-4">
+                <div className="flex  gap-1 items-center">
+                <CoinsIcon size={18} className="stroke-muted-foreground" />
+                  <span>Credits</span>
+                </div>
+                  <span>TODO</span>
+              </Badge>
+              <Badge variant="outline" className="space-x-4">
+                <div className="flex  gap-1 items-center">
+                <ClockIcon size={18} className="stroke-muted-foreground" />
+                  <span>Duration</span>
+                </div>
+                  <span>{DatesToDurationString(phaseDetails.data.finishedAt,phaseDetails.data.startedAt) || "-"}</span>
+                  
+              </Badge>
+
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

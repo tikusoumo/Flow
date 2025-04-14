@@ -5,13 +5,16 @@ export async function PageToHtmlExecutor(
   environment: ExecutionEnvironment<typeof PageToHtmlTask>
 ): Promise<boolean> {
   try {
-    const websiteUrl = environment.getInput("Web Page");
-    console.log(`Launching browser for URL: ${websiteUrl}`);
+   
+    const html = await environment.getPage()!.content()
+    
+    
+    environment.setOutput("HTML", html);
     
    
     return true;
   } catch (error) {
-    console.error("Error launching browser: ", error);
+    environment.log.error(`Error occurred while extracting HTML: ${error}`);
     return false;
   }
 }

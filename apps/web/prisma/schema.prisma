@@ -24,8 +24,8 @@ model Workflow {
   lastRunId     String?
 
   definition String
-  createdAt  DateTime            @default(now())
-  updatedAt  DateTime            @updatedAt
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
   //use can not have multiple workflows with the same definition
   // @@unique([userId, definition])
   executions WorkflowExecution[]
@@ -35,18 +35,18 @@ model Workflow {
 }
 
 model WorkflowExecution {
-  id         String           @id @default(cuid())
-  workflowId String
-  userId     String
-  status     String
-  trigger    String
-  createdAt  DateTime         @default(now())
-  startedAt  DateTime?
-  finishedAt DateTime?
-  creditsConsumed     Int? @default(0)
-
-  phases     ExecutionPhase[]
-  workflow   Workflow         @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  id              String           @id @default(cuid())
+  workflowId      String
+  userId          String
+  status          String
+  trigger         String
+  createdAt       DateTime         @default(now())
+  startedAt       DateTime?
+  finishedAt      DateTime?
+  creditsConsumed Int?             @default(0)
+  definition      String           @default("{}")
+  phases          ExecutionPhase[]
+  workflow        Workflow         @relation(fields: [workflowId], references: [id], onDelete: Cascade)
 }
 
 model ExecutionPhase {
@@ -64,4 +64,15 @@ model ExecutionPhase {
   outputs             String?
   creditsConsumed     Int?
   execution           WorkflowExecution @relation(fields: [workflowExecutionId], references: [id], onDelete: Cascade)
+
+  logs               ExecutionLog[]
+}
+
+model ExecutionLog {
+  id               String   @id @default(cuid())
+  executionPhaseId String
+  message          String
+  timestamp        DateTime @default(now())
+  logLevel         String
+  executionPhase ExecutionPhase @relation(fields: [executionPhaseId], references: [id], onDelete: Cascade)
 }
