@@ -24,7 +24,7 @@ export function NodeInput({
   const hasErrors = invalidInputs.find((node) => node.nodeId === nodeId)?.inputs.find((invalidInput) => invalidInput === input.name)
 
   return (
-    <div className={cn("flex justify-start relative p-3 bg-secondary w-full", hasErrors && "bg-destructive/30")}>
+    <div className={cn("flex justify-start relative p-3 bg-secondary dark:bg-secondary w-full", hasErrors && "bg-destructive/30")}>
       <NodeParamField param={input} nodeId={nodeId} disabled={isConnected}/>
 
       {!input.hideHandle && (
@@ -34,7 +34,7 @@ export function NodeInput({
           type="target"
           position={Position.Left}
           className={cn(
-            "!bg-muted-foreground !border-2 !border-background !-left-2 !w-4 !h-4 ",
+            "!bg-muted-foreground !border-2 !border-background  !-left-2 !w-4 !h-4 ",
             ColorForHandle[input.type]
           )}
         />

@@ -12,7 +12,7 @@ import React from "react";
 
 export default function TaskMenu() {
   return (
-    <aside className="w-[340px] min-w-[340px] max-w-[340px] px-4 h-full bg-white border-l border-gray-300 p-2 overflow-auto">
+    <aside className="w-[340px] min-w-[340px] max-w-[340px] px-4 h-full bg-white border-l border-gray-300 dark:bg-background p-2 overflow-auto">
       <Accordion type="multiple" className="w-full">
         <AccordionItem value="Extraction">
           <AccordionTrigger className="text-lg font-semibold">

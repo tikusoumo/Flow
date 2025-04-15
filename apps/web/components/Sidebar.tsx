@@ -15,6 +15,7 @@ import { useState } from "react";
 import { DialogTitle } from "./ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { cn } from "@/lib/utils";
+import UserAvailableCreditsBadge from "./UserAvailableCreditsBadge";
 
 const routes = [
   {
@@ -50,7 +51,9 @@ export default function DesktopSidebar() {
       <span className="text-2xl font-bold  mb-4">
         <Logo />
       </span>
-      <div>Todo credits</div>
+      <div className="p-2">
+        <UserAvailableCreditsBadge />
+      </div>
       <div className="flex flex-col ">
         {routes.map((route) => {
           const Icon = route.icon;
@@ -58,13 +61,15 @@ export default function DesktopSidebar() {
             <Link
               key={route.href}
               href={route.href}
-              className={cn(buttonVariants({
-                variant:
-                  activeRoute.href === route.href
-                    ? "sidebarItemActive"
-                    : "sidebarItem",
-              }),"mb-0.5 transition-all  duration-200 ease-in-out")}
-              
+              className={cn(
+                buttonVariants({
+                  variant:
+                    activeRoute.href === route.href
+                      ? "sidebarItemActive"
+                      : "sidebarItem",
+                }),
+                "mb-0.5 transition-all  duration-200 ease-in-out"
+              )}
             >
               <Icon className="h-5 w-5 " />
               <span className="">{route.label}</span>
@@ -88,7 +93,7 @@ export function MobileSidebar() {
       <nav className="container flex items-center justify-between ">
         <Sheet open={isOpen} onOpenChange={setOpen}>
           <SheetTrigger asChild>
-            <Button variant="ghost" size={"icon"}>
+            <Button variant="ghost" size={"icon"} >
               <MenuIcon />
             </Button>
           </SheetTrigger>
@@ -100,6 +105,10 @@ export function MobileSidebar() {
               <DialogTitle>Navigation Menu</DialogTitle>
             </VisuallyHidden>
             <Logo />
+            <div className="p-2">
+              <UserAvailableCreditsBadge />
+            </div>
+
             <div className="flex flex-col gap-1">
               {routes.map((route) => {
                 const Icon = route.icon;
@@ -117,7 +126,6 @@ export function MobileSidebar() {
                   >
                     <Icon className="h-5 w-5 " />
                     <span className="">{route.label}</span>
-
                   </Link>
                 );
               })}

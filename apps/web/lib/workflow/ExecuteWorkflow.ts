@@ -242,6 +242,7 @@ async function executePhase(
   if (!runFn) {
     throw new Error(`No executor found for type ${node.data.type}`);
   }
+  waitFor(3000)
   const executionEnvironment: ExecutionEnvironment<any> =
     createExecutionEnvironment(node, environment, logCollector);
   return await runFn(executionEnvironment);
