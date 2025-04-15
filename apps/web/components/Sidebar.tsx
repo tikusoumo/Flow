@@ -14,6 +14,7 @@ import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { useState } from "react";
 import { DialogTitle } from "./ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { cn } from "@/lib/utils";
 
 const routes = [
   {
@@ -57,12 +58,13 @@ export default function DesktopSidebar() {
             <Link
               key={route.href}
               href={route.href}
-              className={buttonVariants({
+              className={cn(buttonVariants({
                 variant:
                   activeRoute.href === route.href
                     ? "sidebarItemActive"
                     : "sidebarItem",
-              })}
+              }),"mb-0.5 transition-all  duration-200 ease-in-out")}
+              
             >
               <Icon className="h-5 w-5 " />
               <span className="">{route.label}</span>

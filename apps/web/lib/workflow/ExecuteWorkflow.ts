@@ -40,7 +40,6 @@ export async function ExecuteWorkFlow(executionId: string) {
 
   await initializePhaseStatuses(execution);
 
-
   const creditsConsumed = 0;
 
   let executionFailed = false;
@@ -48,7 +47,7 @@ export async function ExecuteWorkFlow(executionId: string) {
     await waitFor(1000);
     //TODO: consumed credits
     //TODO: execute phase
-    const phaseExecution = await executeWorkflowPhase(phase, environment,edge);
+    const phaseExecution = await executeWorkflowPhase(phase, environment, edge);
     if (!phaseExecution) {
       executionFailed = true;
       break;
@@ -62,91 +61,88 @@ export async function ExecuteWorkFlow(executionId: string) {
       creditsConsumed
     );
     //TODO: clean up resources
-    
   }
   await cleanupEnvironment(environment);
   revalidatePath("/workflow/runs");
 }
-  async function initializeWorkflowExecution(
-    executionId: string,
-    workflowId: string
-  ) {
-    await prisma.workflowExecution.update({
-      where: { id: executionId },
+async function initializeWorkflowExecution(
+  executionId: string,
+  workflowId: string
+) {
+  await prisma.workflowExecution.update({
+    where: { id: executionId },
+    data: {
+      startedAt: new Date(),
+      status: WorkflowExecutionStatus.RUNNING,
+    },
+  });
+
+  await prisma.workflow.update({
+    where: { id: workflowId },
+    data: {
+      lastRunAt: new Date(),
+      lastRunStatus: WorkflowExecutionStatus.RUNNING,
+      lastRunId: executionId,
+    },
+  });
+}
+
+async function initializePhaseStatuses(execution: any) {
+  await prisma.executionPhase.updateMany({
+    where: {
+      id: {
+        in: execution.phases.map((phase: any) => phase.id),
+      },
+    },
+    data: {
+      status: ExecutionPhaseStatus.PENDING,
+    },
+  });
+}
+
+async function finalizeWorkflowExecution(
+  executionId: string,
+  workflowId: string,
+  executioFailed: boolean,
+  creditsConsumed: number
+) {
+  const finalStatus = executioFailed
+    ? WorkflowExecutionStatus.FAILED
+    : WorkflowExecutionStatus.COMPLETED;
+
+  await prisma.workflowExecution.update({
+    where: { id: executionId },
+    data: {
+      finishedAt: new Date(),
+      status: finalStatus,
+      creditsConsumed,
+    },
+  });
+
+  await prisma.workflow
+    .update({
+      where: { id: workflowId, lastRunId: executionId },
       data: {
-        startedAt: new Date(),
-        status: WorkflowExecutionStatus.RUNNING,
+        lastRunStatus: finalStatus,
       },
+    })
+    .catch((e) => {
+      //ignore
+      //this means thaat we have triggered other run for this workflow
+      //while an execution was running
+      console.error("Error updating workflow status:", e);
     });
-
-    await prisma.workflow.update({
-      where: { id: workflowId },
-      data: {
-        lastRunAt: new Date(),
-        lastRunStatus: WorkflowExecutionStatus.RUNNING,
-        lastRunId: executionId,
-      },
-    });
-  }
-
-  async function initializePhaseStatuses(execution: any) {
-    await prisma.executionPhase.updateMany({
-      where: {
-        id: {
-          in: execution.phases.map((phase: any) => phase.id),
-        },
-      },
-      data: {
-        status: ExecutionPhaseStatus.PENDING,
-      },
-    });
-  }
-
-  async function finalizeWorkflowExecution(
-    executionId: string,
-    workflowId: string,
-    executioFailed: boolean,
-    creditsConsumed: number
-  ) {
-    const finalStatus = executioFailed
-      ? WorkflowExecutionStatus.FAILED
-      : WorkflowExecutionStatus.COMPLETED;
-
-    await prisma.workflowExecution.update({
-      where: { id: executionId },
-      data: {
-        finishedAt: new Date(),
-        status: finalStatus,
-        creditsConsumed,
-      },
-    });
-
-    await prisma.workflow
-      .update({
-        where: { id: workflowId, lastRunId: executionId },
-        data: {
-          lastRunStatus: finalStatus,
-        },
-      })
-      .catch((e) => {
-        //ignore
-        //this means thaat we have triggered other run for this workflow
-        //while an execution was running
-        console.error("Error updating workflow status:", e);
-      });
-  }
-
+}
 
 async function executeWorkflowPhase(
   phase: ExecutionPhase,
   environment: Environment,
-  edge: Edge[],
- 
+  edge: Edge[]
 ) {
   const logCollector = createLogCollector();
   const startedAt = new Date();
   const node = JSON.parse(phase.node) as AppNode;
-  setupEnvironmentForPhase(node, environment,edge);
+  setupEnvironmentForPhase(node, environment, edge);
 
   //Update phase status
   await prisma.executionPhase.update({
@@ -154,9 +150,7 @@ async function executeWorkflowPhase(
     data: {
       status: ExecutionPhaseStatus.RUNNING,
       startedAt,
-      inputs: JSON.stringify(
-        environment.phases[node.id].inputs
-      ),
+      inputs: JSON.stringify(environment.phases[node.id].inputs),
     },
   });
 
@@ -171,7 +165,7 @@ async function executeWorkflowPhase(
 
   const outputs = environment.phases[node.id].outputs;
 
-  await finalizePhase(phase.id, success,outputs,logCollector);
+  await finalizePhase(phase.id, success, outputs, logCollector);
   return { success };
 }
 
@@ -186,7 +180,7 @@ function setupEnvironmentForPhase(
   };
   const inputs = TaskRegistry[node.data.type].inputs;
   for (const input of inputs) {
-    if(input.type === TaskParamType.BROWSER_INSTANCE) continue;
+    if (input.type === TaskParamType.BROWSER_INSTANCE) continue;
     const inputValue = node.data.inputs[input.name];
     if (inputValue) {
       environment.phases[node.id].inputs[input.name] = inputValue;
@@ -194,18 +188,27 @@ function setupEnvironmentForPhase(
     }
 
     //Get inputs from the output in the environment
-    const connectedEdge = edge.find((edge) => edge.target === node.id && edge.targetHandle === input.name);
-    if(!connectedEdge) {
+    const connectedEdge = edge.find(
+      (edge) => edge.target === node.id && edge.targetHandle === input.name
+    );
+    if (!connectedEdge) {
       console.error("Missing edge for input", input.name, "for node", node.id);
       continue;
-      
     }
-    const outputValue = environment.phases[connectedEdge.source].outputs[connectedEdge.sourceHandle!];
+    const outputValue =
+      environment.phases[connectedEdge.source].outputs[
+        connectedEdge.sourceHandle!
+      ];
     environment.phases[node.id].inputs[input.name] = outputValue;
   }
 }
 
-async function finalizePhase(phaseId: string, success: boolean, outputs: any,logCollector: LogCollector) {
+async function finalizePhase(
+  phaseId: string,
+  success: boolean,
+  outputs: any,
+  logCollector: LogCollector
+) {
   const finalStatus = success
     ? ExecutionPhaseStatus.COMPLETED
     : ExecutionPhaseStatus.FAILED;
@@ -217,14 +220,14 @@ async function finalizePhase(phaseId: string, success: boolean, outputs: any,log
       finishedAt: new Date(),
       outputs: JSON.stringify(outputs),
       logs: {
-        createMany:{
+        createMany: {
           data: logCollector.getAll().map((log) => ({
             logLevel: log.level,
             message: log.message,
             timestamp: log.timestamp,
-          }))
-        }
-      }
+          })),
+        },
+      },
     },
   });
 }
@@ -234,19 +237,13 @@ async function executePhase(
   node: AppNode,
   environment: Environment,
   logCollector: LogCollector
-
 ): Promise<boolean> {
   const runFn = ExecutorRegistry[node.data.type];
   if (!runFn) {
     throw new Error(`No executor found for type ${node.data.type}`);
   }
-  const executionEnvironment: ExecutionEnvironment<any> = createExecutionEnvironment(
-    node,
-    environment,
-    logCollector
-    
-
-  );
+  const executionEnvironment: ExecutionEnvironment<any> =
+    createExecutionEnvironment(node, environment, logCollector);
   return await runFn(executionEnvironment);
 }
 
@@ -254,7 +251,7 @@ function createExecutionEnvironment(
   node: AppNode,
   environment: Environment,
   logCollector: LogCollector
-):ExecutionEnvironment<any>{
+): ExecutionEnvironment<any> {
   //In this object we are creating a closure for the environment
   return {
     getInput: (name: string) => environment.phases[node.id]?.inputs[name],
@@ -262,16 +259,15 @@ function createExecutionEnvironment(
     setOutput: (name: string, value: string) => {
       environment.phases[node.id].outputs[name] = value;
     },
-    
-    getBrowser:()=> environment.browser,
-    setBrowser:(browser: Browser)=> environment.browser = browser,
 
-    getPage:()=> environment.page,
-    setPage:(page:Page)=> (environment.page = page),
+    getBrowser: () => environment.browser,
+    setBrowser: (browser: Browser) => (environment.browser = browser),
 
-    log: logCollector
- 
-  }
+    getPage: () => environment.page,
+    setPage: (page: Page) => (environment.page = page),
+
+    log: logCollector,
+  };
 }
 
 async function cleanupEnvironment(environment: Environment) {
