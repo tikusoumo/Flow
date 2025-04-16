@@ -100,7 +100,7 @@ export default function ExecutionViewer({
             value={
               <div className="flex items-center gap-2">
                 <PhaseStatusBadge
-                  status={query.data?.status as WorkflowExecutionStatus}
+                  status={query.data?.status as ExecutionPhaseStatus}
                 />
                 <span className="text-sm font-semibold">
                   {query.data?.status}

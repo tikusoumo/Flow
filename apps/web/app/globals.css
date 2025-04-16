@@ -104,7 +104,10 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    @apply overflow-y-hidden; 
+  }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground ;
   }
 }

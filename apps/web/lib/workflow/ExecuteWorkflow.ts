@@ -98,10 +98,10 @@ async function initializePhaseStatuses(execution: any) {
 async function finalizeWorkflowExecution(
   executionId: string,
   workflowId: string,
-  executioFailed: boolean,
+  executionFailed: boolean,
   creditsConsumed: number
 ) {
-  const finalStatus = executioFailed
+  const finalStatus = executionFailed
     ? WorkflowExecutionStatus.FAILED
     : WorkflowExecutionStatus.COMPLETED;
 
@@ -123,7 +123,7 @@ async function finalizeWorkflowExecution(
     })
     .catch((e) => {
       //ignore
-      //this means thaat we have triggered other run for this workflow
+      //this means that we have triggered other run for this workflow
       //while an execution was running
       console.error("Error updating workflow status:", e);
     });

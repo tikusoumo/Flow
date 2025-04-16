@@ -8,6 +8,7 @@ import React from 'react'
 import SaveBtn from './SaveBtn'
 import ExecuteBtn from './ExecuteBtn'
 import NavigationTabs from './NavigationTabs'
+import PublishBtn from './PublishBtn'
 
 interface TopBarProps {
   title: string
@@ -38,6 +39,7 @@ export default function TopBar({title,subtitle,workflowId,hideButtons=false}: To
         {!hideButtons && <>
         <ExecuteBtn workflowId={workflowId}/>
         <SaveBtn workflowId={workflowId}/>
+        <PublishBtn workflowId={workflowId}/>
         </>} 
       </div>
     </header>
