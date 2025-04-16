@@ -32,36 +32,31 @@ export async function ExecuteWorkFlow(executionId: string) {
     throw new Error("Execution not found");
   }
   const edge = JSON.parse(execution.definition).edges as Edge[];
-  //TODO: setup execution environment
   const environment: Environment = { phases: {} };
-  //TODO: initialize workflow execution
   await initializeWorkflowExecution(executionId, execution.workflowId);
-  //TODO: initialize phase status
 
   await initializePhaseStatuses(execution);
 
-  const creditsConsumed = 0;
+  let creditsConsumed = 0;
 
   let executionFailed = false;
   for (const phase of execution.phases) {
     await waitFor(1000);
-    //TODO: consumed credits
-    //TODO: execute phase
-    const phaseExecution = await executeWorkflowPhase(phase, environment, edge);
-    if (!phaseExecution) {
+
+    const phaseExecution = await executeWorkflowPhase(phase, environment, edge, execution.userId);
+    creditsConsumed += phaseExecution.creditsConsumed;
+    if (!phaseExecution.success) {
       executionFailed = true;
       break;
     }
 
-    //TODO: finalize execution
-    await finalizeWorkflowExecution(
-      executionId,
-      execution.workflowId,
-      executionFailed,
-      creditsConsumed
-    );
-    //TODO: clean up resources
   }
+  await finalizeWorkflowExecution(
+    executionId,
+    execution.workflowId,
+    executionFailed,
+    creditsConsumed
+  );
   await cleanupEnvironment(environment);
   revalidatePath("/workflow/runs");
 }
@@ -137,7 +132,8 @@ async function finalizeWorkflowExecution(
 async function executeWorkflowPhase(
   phase: ExecutionPhase,
   environment: Environment,
-  edge: Edge[]
+  edge: Edge[],
+  userId: string
 ) {
   const logCollector = createLogCollector();
   const startedAt = new Date();
@@ -158,15 +154,24 @@ async function executeWorkflowPhase(
 
   console.log(`Executing phase ${phase.id} with credits: ${creditsRequired}`);
 
-  //TODO: decrement credits from user balance (with required credits)
-  //execute phase simulation
 
-  const success = await executePhase(phase, node, environment, logCollector);
+  let success = await decrementCredits(userId, creditsRequired, logCollector);
+  const creditsConsumed = success ? creditsRequired : 0;
+  if (success) {
+    //we can execute the phase if we have enough credits
+    success = await executePhase(phase, node, environment, logCollector);
+  }
 
   const outputs = environment.phases[node.id].outputs;
 
-  await finalizePhase(phase.id, success, outputs, logCollector);
-  return { success };
+  await finalizePhase(
+    phase.id,
+    success,
+    outputs,
+    logCollector,
+    creditsConsumed
+  );
+  return { success, creditsConsumed };
 }
 
 function setupEnvironmentForPhase(
@@ -207,7 +212,8 @@ async function finalizePhase(
   phaseId: string,
   success: boolean,
   outputs: any,
-  logCollector: LogCollector
+  logCollector: LogCollector,
+  creditsConsumed: number
 ) {
   const finalStatus = success
     ? ExecutionPhaseStatus.COMPLETED
@@ -219,6 +225,7 @@ async function finalizePhase(
       status: finalStatus,
       finishedAt: new Date(),
       outputs: JSON.stringify(outputs),
+      creditsConsumed,
       logs: {
         createMany: {
           data: logCollector.getAll().map((log) => ({
@@ -242,7 +249,7 @@ async function executePhase(
   if (!runFn) {
     throw new Error(`No executor found for type ${node.data.type}`);
   }
-  waitFor(3000)
+  waitFor(3000);
   const executionEnvironment: ExecutionEnvironment<any> =
     createExecutionEnvironment(node, environment, logCollector);
   return await runFn(executionEnvironment);
@@ -276,5 +283,26 @@ async function cleanupEnvironment(environment: Environment) {
     await environment.browser.close().catch((err) => {
       console.error("Error closing browser: ", err);
     });
+  }
+}
+
+async function decrementCredits(
+  userId: string,
+  amount: number,
+  logCollector: LogCollector
+) {
+  try {
+    await prisma.userBalance.update({
+      where: { userId, credits: { gte: amount } },
+      data: {
+        credits: { decrement: amount },
+      },
+    });
+    return true;
+    
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (error) {
+    logCollector.error("insufficient balance");
+    return false;
   }
 }

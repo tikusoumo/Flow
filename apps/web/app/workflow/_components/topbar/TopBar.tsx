@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import React from 'react'
 import SaveBtn from './SaveBtn'
 import ExecuteBtn from './ExecuteBtn'
+import NavigationTabs from './NavigationTabs'
 
 interface TopBarProps {
   title: string
@@ -29,6 +30,9 @@ export default function TopBar({title,subtitle,workflowId,hideButtons=false}: To
             <p className='font-bold  text-ellipsis truncate'>{title}</p>
             {subtitle && <span className="text-muted-foreground text-xs  truncate text-ellipsis">{subtitle}</span>}
         </div>
+      </div>
+      <div className='absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center '>
+        <NavigationTabs workflowId={workflowId}/>
       </div>
       <div className='flex items-center gap-2'>
         {!hideButtons && <>

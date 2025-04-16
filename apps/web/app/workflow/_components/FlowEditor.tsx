@@ -22,6 +22,7 @@ import { TaskType } from "@/types/task";
 import { AppNode } from "@/types/appNode";
 import DeletableEdge from "./edges/DeletableEdge";
 import { TaskRegistry } from "@/lib/workflow/task/registry";
+import { useTheme } from "next-themes";
 
 const nodeTypes = {
   FlowNode: NodeComponent,
@@ -122,6 +123,7 @@ export default function FlowEditor({ workflow }: { workflow: Workflow }) {
     const detectedCycle = hasCycle(target);
     return !detectedCycle;
   }
+  const { theme } = useTheme();
 
   return (
     <main className="flex h-full w-full">
@@ -142,7 +144,7 @@ export default function FlowEditor({ workflow }: { workflow: Workflow }) {
         isValidConnection={isValidConnection}
       >
         <Controls position="top-left" fitViewOptions={fitViewOptions} />
-        <Background variant={BackgroundVariant.Dots} gap={10} size={1} />
+        <Background variant={BackgroundVariant.Cross} gap={10} size={1} lineWidth={theme === 'dark' ? 0.1 : 5} />
       </ReactFlow>
     </main>
   );

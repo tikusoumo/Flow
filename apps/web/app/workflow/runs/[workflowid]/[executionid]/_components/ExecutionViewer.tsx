@@ -42,6 +42,7 @@ import {
 import { cn } from "@/lib/utils";
 import { LogLevel } from "@/types/log";
 import PhaseStatusBadge from "./PhaseStatusBadge";
+import ReactCountupWrapper from "@/components/ReactCountupWrapper";
 
 type ExecutionData = Awaited<ReturnType<typeof GetWorkflowExecutionWithPhases>>;
 
@@ -96,7 +97,16 @@ export default function ExecutionViewer({
           <ExecutionLabel
             icon={CircleDashedIcon}
             label="Status"
-            value={query.data?.status}
+            value={
+              <div className="flex items-center gap-2">
+                <PhaseStatusBadge
+                  status={query.data?.status as WorkflowExecutionStatus}
+                />
+                <span className="text-sm font-semibold">
+                  {query.data?.status}
+                </span>
+              </div>
+            }
           />
           {/*Started At  label*/}
           <ExecutionLabel
@@ -125,7 +135,7 @@ export default function ExecutionViewer({
           <ExecutionLabel
             icon={CoinsIcon}
             label="Credits Used"
-            value={creditsComsumed}
+            value={<ReactCountupWrapper value={creditsComsumed}/>}
           />
         </div>
         <Separator className="my-2" />
@@ -179,7 +189,7 @@ export default function ExecutionViewer({
                   <CoinsIcon size={18} className="stroke-muted-foreground" />
                   <span>Credits</span>
                 </div>
-                <span>TODO</span>
+                <span>{phaseDetails.data.creditsConsumed}</span>
               </Badge>
               <Badge variant="outline" className="space-x-4">
                 <div className="flex  gap-1 items-center">
@@ -248,7 +258,7 @@ function ParameterViewer({
 
   return (
     <Card>
-      <CardHeader className="rounded-xl rounded-b-none bg-gray-50 dark:bg-background py-4 ">
+      <CardHeader className="rounded-xl rounded-b-none bg-gray-50 dark:bg-secondary py-4 ">
         <CardTitle className="text-base"> {title} </CardTitle>
         <CardDescription className="text-muted-foreground text-sm ">
           {subtitle}
@@ -283,7 +293,7 @@ function LogViewer({ logs }: { logs: ExecutionLog[] | undefined }) {
 
   return (
     <Card className="w-full">
-      <CardHeader className="rounded-xl rounded-b-none bg-gray-50 dark:bg-background py-4 ">
+      <CardHeader className="rounded-xl rounded-b-none bg-gray-50 dark:bg-secondary py-4 ">
         <CardTitle className="text-base"> Logs</CardTitle>
         <CardDescription className="text-muted-foreground text-sm ">
           Logs for the phase

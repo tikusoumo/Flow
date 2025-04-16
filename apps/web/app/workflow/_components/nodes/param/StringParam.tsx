@@ -33,7 +33,7 @@ export default function StringParam({
       <Component
         id={id}
         disabled={disabled}
-        className="w-full bg-white"
+        className="w-full bg-white dark:bg-background"
         placeholder="Enter a string"
         value={internalValue}
         onChange={(e: any) => setInternalValue(e.target.value)}

@@ -21,7 +21,7 @@ export default function UserAvailableCreditsBadge() {
       <span className="font-semibold capitalize">
         {query.isLoading && <Loader2Icon className="animate-spin" />}
         {!query.isLoading && query.data && <ReactCountupWrapper value={query.data} />}
-        {!query.isLoading && !query.data && "-"}
+        {!query.isLoading && query.data === undefined && "-"}
       </span>
     </Link>
   );
