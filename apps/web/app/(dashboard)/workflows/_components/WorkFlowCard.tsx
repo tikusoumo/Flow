@@ -15,9 +15,12 @@ import { WorkflowStatus } from "@/types/workflow";
 import { Workflow } from "@prisma/client";
 
 import {
+  CoinsIcon,
+  CornerDownRightIcon,
   // Delete,
   FileTextIcon,
   MoreVerticalIcon,
+  MoveRightIcon,
   PencilIcon,
   PlayIcon,
   TrashIcon,
@@ -25,10 +28,13 @@ import {
 import Link from "next/link";
 import React, { useState } from "react";
 import DeleteWorkflowDialog from "./DeleteWorkflowDialog";
+import RunBtn from "./RunBtn";
+import SchedulerDialog from "./SchedulerDialog";
+import { Badge } from "@/components/ui/badge";
 
 const statusColor = {
   [WorkflowStatus.DRAFT]: "bg-yellow-400 text-yellow-600",
-  [WorkflowStatus.PUBLISHED]: "bg-primary-500/10",
+  [WorkflowStatus.PUBLISHED]: "bg-primary",
 };
 
 export default function WorkFlowCard({ workflow }: { workflow: Workflow }) {
@@ -66,9 +72,11 @@ export default function WorkFlowCard({ workflow }: { workflow: Workflow }) {
                 </span>
               )}
             </h3>
+            <ScheduleSection isDraft={isDraft} creditsCost={workflow.creditsCost!} />
           </div>
         </div>
         <div className="flex items-center justify-end gap-2 ">
+          {!isDraft && <RunBtn workflowId={workflow.id} />}
           <Link
             href={`/workflow/editor/${workflow.id}`}
             className={cn(
@@ -79,38 +87,78 @@ export default function WorkFlowCard({ workflow }: { workflow: Workflow }) {
             <PencilIcon className="h-4 w-4" />
             Edit
           </Link>
-          <WorkflowActions workflowName={workflow.name} workflowId={workflow.id} />
+          <WorkflowActions
+            workflowName={workflow.name}
+            workflowId={workflow.id}
+          />
         </div>
       </CardContent>
     </Card>
   );
 }
 
-function WorkflowActions({workflowName,workflowId}: {workflowName: string,workflowId: string}) {
+function WorkflowActions({
+  workflowName,
+  workflowId,
+}: {
+  workflowName: string;
+  workflowId: string;
+}) {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   return (
     <>
-    <DeleteWorkflowDialog open={deleteDialogOpen} setOpen={setDeleteDialogOpen} workflowName={workflowName} workflowId={workflowId} />
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm">
-          <TooltipWrapper content={"More options"}>
-            <div className="flex items-center justify-center w-full h-full">
-              <MoreVerticalIcon size={18} className="h-4 w-4" />
-            </div>
-          </TooltipWrapper>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem className="cursor-pointer flex items-center gap-2 text-destructive"
-        onSelect={() => setDeleteDialogOpen((prev) => !prev)}>
-          <TrashIcon size={18} className="text-destructive" />
-          Delete
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-          </>
+      <DeleteWorkflowDialog
+        open={deleteDialogOpen}
+        setOpen={setDeleteDialogOpen}
+        workflowName={workflowName}
+        workflowId={workflowId}
+      />
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" size="sm">
+            <TooltipWrapper content={"More options"}>
+              <div className="flex items-center justify-center w-full h-full">
+                <MoreVerticalIcon size={18} className="h-4 w-4" />
+              </div>
+            </TooltipWrapper>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            className="cursor-pointer flex items-center gap-2 text-destructive"
+            onSelect={() => setDeleteDialogOpen((prev) => !prev)}
+          >
+            <TrashIcon size={18} className="text-destructive" />
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </>
+  );
+}
+
+function ScheduleSection({ isDraft, creditsCost }: { isDraft?: boolean; creditsCost: number }) {
+  if (isDraft) return null;
+  return (
+    <div className="flex items-center gap-2 ">
+      <div className="flex items-center gap-1">
+        <CornerDownRightIcon className="h-4 w-4 text-muted-foreground" />
+        <SchedulerDialog />
+        <MoveRightIcon className="h-4 w-4 text-muted-foreground" />
+      </div>
+      <TooltipWrapper content="Credit consumption for full run">
+        <div className="flex items-center gap-1">
+          <Badge
+            variant={"outline"}
+            className="space-x-2 text-muted-foreground rounded-sm"
+          >
+            <CoinsIcon className="h-4 w-4 " />
+            <span className="text-xs">{creditsCost}</span>
+          </Badge>
+        </div>
+      </TooltipWrapper>
+    </div>
   );
 }

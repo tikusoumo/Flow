@@ -9,6 +9,7 @@ import {
   WorkFlowExecutionPlan,
   WorkflowExecutionStatus,
   WorkflowExecutionTrigger,
+  WorkflowStatus,
 } from "@/types/workflow";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
@@ -37,20 +38,32 @@ export async function RunWorkflow(form: {
     throw new Error("Workflow not found");
   }
 
-  let excutionPlan: WorkFlowExecutionPlan;
-  if (!flowDefinition) {
-    throw new Error("Flow definition is required");
+  let executionPlan: WorkFlowExecutionPlan;
+  let workflowDefinition = flowDefinition
+  if(workflow.status === WorkflowStatus.PUBLISHED ){
+    if(!workflow.executionPlan){
+      throw new Error("Workflow is not published and execution plan is not set")
+    }
+    executionPlan = JSON.parse(workflow.executionPlan)
+    workflowDefinition = workflow.definition
+  }else {
+    //workflow is a draft
+    if (!flowDefinition) {
+      throw new Error("Flow definition is required");
+    }
+  
+    const flow = JSON.parse(flowDefinition);
+    const result = FlowToExecutionPlan(flow.nodes, flow.edges);
+    if (result.error) {
+      throw new Error("Error in flow definition: " + result.error);
+    }
+    if (!result.executionPlan) {
+      throw new Error("Execution plan is empty");
+    }
+    executionPlan = result.executionPlan;
+    
   }
-
-  const flow = JSON.parse(flowDefinition);
-  const result = FlowToExecutionPlan(flow.nodes, flow.edges);
-  if (result.error) {
-    throw new Error("Error in flow definition: " + result.error);
-  }
-  if (!result.executionPlan) {
-    throw new Error("Execution plan is empty");
-  }
-  excutionPlan = result.executionPlan;
+  
   
 
   const execution = await prisma.workflowExecution.create({
@@ -60,9 +73,9 @@ export async function RunWorkflow(form: {
       status: WorkflowExecutionStatus.PENDING,
       startedAt: new Date(),
       trigger: WorkflowExecutionTrigger.MANUAL,
-      definition: flowDefinition,
+      definition: workflowDefinition,
       phases: {
-        create: excutionPlan.flatMap((phase) => {
+        create: executionPlan.flatMap((phase) => {
           return phase.nodes.flatMap((node) => {
             return {
               userId,

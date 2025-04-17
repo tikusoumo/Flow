@@ -22,12 +22,13 @@ model Workflow {
   lastRunAt     DateTime?
   lastRunStatus String?
   lastRunId     String?
-
+  cron         String?
   definition    String
   executionPlan String?
   creditsCost   Int?                @default(0)
   createdAt     DateTime            @default(now())
   updatedAt     DateTime            @updatedAt
+  nextRunAt   DateTime?
   //use can not have multiple workflows with the same definition
   // @@unique([userId, definition])
   executions    WorkflowExecution[]

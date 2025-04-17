@@ -59,5 +59,5 @@ export async function PublishWorkflow({
             creditsCost,
         },
     })
-    revalidatePath(`/workflows/editor/${id}`)
+    revalidatePath(`/workflow/editor/${id}`)
 }

@@ -9,69 +9,86 @@ import { useReactFlow } from "@xyflow/react";
 import { PlayIcon, Loader2Icon } from "lucide-react"; // Import Loader2Icon
 import { toast } from "sonner";
 
-export default function ExecuteBtn({ workflowId }: { workflowId: string }) {
+export default function ExecuteBtn({
+  workflowId,
+  initialDefinition,
+  isPublished // Prop is still here, needed for logic below
+}: {
+  workflowId: string;
+  initialDefinition: string;
+  isPublished: boolean;
+}) {
   const generate = useExecutionPlan();
   const { toObject } = useReactFlow();
 
   // --- Save Mutation ---
   const saveMutation = useMutation({
     mutationFn: UpdateWorkflow,
-    // onSuccess/onError handled inline during the execution flow
+    // onSuccess/onError handled inline
   });
 
   // --- Execute Mutation ---
   const executeMutation = useMutation({
     mutationFn: RunWorkflow,
     onSuccess: () => {
-      // The redirect logic is handled by the server action itself
-      // We just show a pending state toast here, the redirect error handler confirms success
       toast.loading("Execution started, redirecting...", { id: "flow-execution" });
     },
     onError: (error) => {
-      // Check if the error is the special redirect error
       if (error instanceof Error && error.message.includes("NEXT_REDIRECT")) {
-        // This confirms the execution started successfully and redirect is happening.
-        // The loading toast from onSuccess can be updated or dismissed here if needed,
-        // but often just letting the redirect happen is fine.
-        // toast.success("Execution started, redirecting...", { id: "flow-execution" }); // Optional: Update toast
-        return; // Don't show the failure toast
+        toast.success("Execution started, redirecting...", { id: "flow-execution" });
+        return; // Don't show failure toast on successful redirect
       }
-      // Otherwise, it's a real error
       toast.error("Execution failed: " + error.message, { id: "flow-execution" });
     },
   });
 
   const handleExecute = async () => {
     const saveToastId = "save-before-execute";
+    const executeToastId = "flow-execution";
 
-    // 1. Validate execution plan (optional, but good practice)
+    // 1. Validate execution plan (optional)
     const plan = generate();
     if (!plan) {
-      // Assuming generate() shows its own toast/error
       return;
     }
 
-    // 2. Start Saving
-    toast.loading("Saving workflow...", { id: saveToastId });
-    const workflowDefinition = JSON.stringify(toObject());
+    // 2. Get current definition
+    const currentDefinitionString = JSON.stringify(toObject());
+    let saveSuccessful = true; // Assume save isn't needed or will succeed
 
-    try {
-      // 3. Attempt to save using mutateAsync
-      await saveMutation.mutateAsync({
-        id: workflowId,
-        definition: workflowDefinition,
-      });
+    // 3. Check if save is needed (changes detected AND workflow is NOT published)
+    if (currentDefinitionString !== initialDefinition && !isPublished) {
+      toast.loading("Saving changes...", { id: saveToastId });
+      try {
+        // Attempt to save using mutateAsync
+        await saveMutation.mutateAsync({
+          id: workflowId,
+          definition: currentDefinitionString,
+        });
+        toast.success("Workflow saved.", { id: saveToastId });
 
-      toast.success("Workflow saved.", { id: saveToastId });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (saveError: any) {
+        saveSuccessful = false;
+        toast.error(`Save failed: ${saveError.message}`, { id: saveToastId });
+      }
+    } else {
+       // Log why save was skipped (optional)
+       if (currentDefinitionString === initialDefinition) {
+         console.log("No changes detected, skipping save before execution.");
+       } else if (isPublished) {
+         console.log("Workflow is published, skipping save before execution.");
+       }
+    }
 
-      // 4. If save is successful, start execution
-      
-      executeMutation.mutate({ workflowId, flowDefinition: workflowDefinition });
+    // 4. Proceed to execution only if save was not needed or was successful
+    if (saveSuccessful) {
+      toast.loading("Starting execution...", { id: executeToastId });
 
-    } catch (saveError) {
-      // 5. Handle save error
-      toast.error(`Save failed: ${saveError.message}`, { id: saveToastId });
-      // Do not proceed to execution
+      // Pass BOTH workflowId and the currentDefinitionString
+      // RunWorkflow action will decide whether to use the definition (if draft)
+      // or ignore it and use the stored plan (if published)
+      executeMutation.mutate({ workflowId, flowDefinition: currentDefinitionString });
     }
   };
 
@@ -80,14 +97,14 @@ export default function ExecuteBtn({ workflowId }: { workflowId: string }) {
   return (
     <Button
       variant={"outline"}
-      className="flex items-center gap-2 min-w-[110px]" // Added min-width
+      className="flex items-center gap-2 min-w-[110px]"
       disabled={isProcessing}
-      onClick={handleExecute} // Use the new async handler
+      onClick={handleExecute}
     >
       {isProcessing ? (
         <Loader2Icon size={16} className="animate-spin" />
       ) : (
-        <PlayIcon size={16} className="stroke-yellow-400" /> // Keep original icon size/color
+        <PlayIcon size={16} className="stroke-yellow-400" />
       )}
       {saveMutation.isPending ? "Saving..." : executeMutation.isPending ? "Executing..." : "Execute"}
     </Button>

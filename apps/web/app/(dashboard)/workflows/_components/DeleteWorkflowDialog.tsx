@@ -1,3 +1,4 @@
+"use client";
 import DeleteWorkflow from "@/actions/workflows/DeleteWorkflow";
 import {
   AlertDialog,

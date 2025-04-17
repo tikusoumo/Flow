@@ -25,7 +25,7 @@ export default function PublishBtn({ workflowId }: { workflowId: string }) {
     onSuccess: () => {
       // The redirect logic is handled by the server action itself
       // We just show a pending state toast here, the redirect error handler confirms success
-      toast.loading("Publish started, redirecting...", {
+      toast.success("Published Successfully.", {
         id: "flow-execution",
       });
     },
