@@ -43,5 +43,6 @@ export enum ExecutionPhaseStatus {
 
 export enum WorkflowExecutionTrigger {
   MANUAL = "MANUAL",
+  CRON = "CRON",
   
 }

@@ -31,7 +31,7 @@ export async function ExecuteWorkFlow(executionId: string) {
   if (!execution) {
     throw new Error("Execution not found");
   }
-  const edge = JSON.parse(execution.definition).edges as Edge[];
+  const edges = JSON.parse(execution.definition)?.edges || [];
   const environment: Environment = { phases: {} };
   await initializeWorkflowExecution(executionId, execution.workflowId);
 
@@ -43,7 +43,7 @@ export async function ExecuteWorkFlow(executionId: string) {
   for (const phase of execution.phases) {
     await waitFor(1000);
 
-    const phaseExecution = await executeWorkflowPhase(phase, environment, edge, execution.userId);
+    const phaseExecution = await executeWorkflowPhase(phase, environment, edges, execution.userId);
     creditsConsumed += phaseExecution.creditsConsumed;
     if (!phaseExecution.success) {
       executionFailed = true;
@@ -132,13 +132,13 @@ async function finalizeWorkflowExecution(
 async function executeWorkflowPhase(
   phase: ExecutionPhase,
   environment: Environment,
-  edge: Edge[],
+  edges: Edge[],
   userId: string
 ) {
   const logCollector = createLogCollector();
   const startedAt = new Date();
   const node = JSON.parse(phase.node) as AppNode;
-  setupEnvironmentForPhase(node, environment, edge);
+  setupEnvironmentForPhase(node, environment, edges);
 
   //Update phase status
   await prisma.executionPhase.update({
@@ -177,7 +177,7 @@ async function executeWorkflowPhase(
 function setupEnvironmentForPhase(
   node: AppNode,
   environment: Environment,
-  edge: Edge[]
+  edges: Edge[]
 ) {
   environment.phases[node.id] = {
     inputs: {},
@@ -193,7 +193,7 @@ function setupEnvironmentForPhase(
     }
 
     //Get inputs from the output in the environment
-    const connectedEdge = edge.find(
+    const connectedEdge = edges.find(
       (edge) => edge.target === node.id && edge.targetHandle === input.name
     );
     if (!connectedEdge) {
