@@ -1,8 +1,8 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { ExecuteWorkFlow } from "@/lib/workflow/ExecuteWorkflow";
-import { FlowToExecutionPlan } from "@/lib/workflow/ExecutionPlan";
+import { ExecuteWorkFlow } from "@/lib/workflow/executeWorkflow/ExecuteWorkflow";
+import { FlowToExecutionPlan } from "@/lib/workflow/executionPlan/ExecutionPlan";
 import { TaskRegistry } from "@/lib/workflow/task/registry";
 import {
   ExecutionPhaseStatus,

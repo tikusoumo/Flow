@@ -1,7 +1,7 @@
 "use server"
 
 import prisma from '@/lib/prisma'
-import { FlowToExecutionPlan } from '@/lib/workflow/ExecutionPlan'
+import { FlowToExecutionPlan } from '@/lib/workflow/executionPlan/ExecutionPlan'
 import { CalculateWorkflowCost } from '@/lib/workflow/helpers'
 import { WorkflowStatus } from '@/types/workflow'
 import { auth } from '@clerk/nextjs/server'
