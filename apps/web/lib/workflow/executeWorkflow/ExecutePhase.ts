@@ -13,6 +13,7 @@ export async function executePhase(
 ): Promise<boolean> {
   const runFn = ExecutorRegistry[node.data.type];
   if (!runFn) {
+    logCollector.error(`No executor found for type ${node.data.type}`);
     throw new Error(`No executor found for type ${node.data.type}`);
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

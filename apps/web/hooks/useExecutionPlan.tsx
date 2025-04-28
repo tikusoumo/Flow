@@ -8,6 +8,7 @@ const useExecutionPlan = () => {
   const {toObject} = useReactFlow()
   const {setInvalidInputs,clearErrors} = useFlowValidation()
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleError = (error: any) => {
     switch(error.type){
       case FlowToExecutionPlanValidationError.NO_ENTRY_POINT:

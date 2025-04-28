@@ -79,7 +79,7 @@ export default function SchedulerDialog(props: {
         >
           {workflowHasValidCron && (
             <div className="flex items-center gap-2">
-              <Clock10Icon className="h-3 w-3" />
+              <Clock10Icon size={20}/>
               {readableSavedCron}
             </div>
           )}

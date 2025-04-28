@@ -13,10 +13,28 @@ import React from "react";
 export default function TaskMenu() {
   return (
     <aside className="w-[340px] min-w-[340px] max-w-[340px] px-4 h-full bg-white border-l border-gray-300 dark:bg-background p-2 overflow-auto">
-      <Accordion type="multiple" className="w-full">
-        <AccordionItem value="Extraction">
+      <Accordion type="multiple" className="w-full" defaultValue={["interaction", "extraction"]}>
+        <AccordionItem value="interaction">
+          <AccordionTrigger className="text-lg font-semibold">
+            User Interactions
+          </AccordionTrigger>
+          <AccordionContent className="flex flex-col gap-2">
+            <TaskMenuBtn taskType={TaskType.FILL_INPUT} />
+            <TaskMenuBtn taskType={TaskType.CLICK_ELEMENT} />
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="extraction">
           <AccordionTrigger className="text-lg font-semibold">
             Data Extraction
+          </AccordionTrigger>
+          <AccordionContent className="flex flex-col gap-2">
+            <TaskMenuBtn taskType={TaskType.PAGE_TO_HTML} />
+            <TaskMenuBtn taskType={TaskType.EXTRACT_TEXT_FROM_ELEMENT} />
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="timing">
+          <AccordionTrigger className="text-lg font-semibold">
+              Timing controls
           </AccordionTrigger>
           <AccordionContent className="flex flex-col gap-2">
             <TaskMenuBtn taskType={TaskType.PAGE_TO_HTML} />

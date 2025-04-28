@@ -9,7 +9,7 @@ import { cleanupEnvironment } from "./CleanupEnvionment";
 import { finalizeWorkflowExecution } from "./FinalizeWorkflowExecution";
 import { executeWorkflowPhase } from "./ExecuteWorkflowPhase";
 
-export async function ExecuteWorkFlow(executionId: string) {
+export async function ExecuteWorkFlow(executionId: string, nextRunAt?: Date) {
   const execution = await prisma.workflowExecution.findUnique({
     where: {
       id: executionId,
@@ -24,7 +24,7 @@ export async function ExecuteWorkFlow(executionId: string) {
   }
   const edges = JSON.parse(execution.definition)?.edges || [];
   const environment: Environment = { phases: {} };
-  await initializeWorkflowExecution(executionId, execution.workflowId);
+  await initializeWorkflowExecution(executionId, execution.workflowId, nextRunAt);
 
   await initializePhaseStatuses(execution);
 

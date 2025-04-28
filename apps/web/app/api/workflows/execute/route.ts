@@ -7,6 +7,8 @@ import {
   WorkflowExecutionStatus,
   WorkflowExecutionTrigger,
 } from "@/types/workflow";
+import { timingSafeEqual } from "node:crypto";
+import  parser  from "cron-parser";
 
 export async function GET(request: Request) {
   const authHeader = request.headers.get("authorization");
@@ -43,7 +45,11 @@ export async function GET(request: Request) {
       { status: 404 }
     );
   }
-  const execution = await prisma.workflowExecution.create({
+
+ try {
+    const cron = parser.parse(workflow.cron!,{tz: 'UTC'});
+    const nextRun = cron.next().toDate();
+    const execution = await prisma.workflowExecution.create({
     data: {
       workflowId,
       userId: workflow.userId,
@@ -65,10 +71,21 @@ export async function GET(request: Request) {
       },
     },
   });
-
-  await ExecuteWorkFlow(execution.id);
+ 
+  await ExecuteWorkFlow(execution.id,nextRun);
   return new Response(JSON.stringify(execution), { status: 200 });
+ }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  catch (error) {
+    return Response.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+  
 }
+
+
 
 function isValidSecret(secret: string) {
   const API_SECRET = process.env.API_SECRET;
@@ -76,8 +93,7 @@ function isValidSecret(secret: string) {
     return false;
   }
   try {
-    const timingSafeEqual = Buffer.from(secret).equals(Buffer.from(API_SECRET));
-    return timingSafeEqual;
+    return timingSafeEqual(Buffer.from(secret), Buffer.from(API_SECRET));
   } catch (error) {
     console.error("Error comparing secrets:", error);
     return false;

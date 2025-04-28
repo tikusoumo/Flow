@@ -3,7 +3,9 @@ import { WorkflowExecutionStatus } from "@/types/workflow";
 
 export async function initializeWorkflowExecution(
     executionId: string,
-    workflowId: string
+    workflowId: string,
+    nextRunAt?: Date
+    
   ) {
     await prisma.workflowExecution.update({
       where: { id: executionId },
@@ -19,6 +21,7 @@ export async function initializeWorkflowExecution(
         lastRunAt: new Date(),
         lastRunStatus: WorkflowExecutionStatus.RUNNING,
         lastRunId: executionId,
+        ...(nextRunAt && { nextRunAt }),
       },
     });
   }
