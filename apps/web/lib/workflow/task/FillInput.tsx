@@ -28,7 +28,7 @@ export const FillInputTask
       name: "Value",
       type: TaskParamType.STRING,
       required: true,
-      
+        
     },
   ] as const,
     outputs: [

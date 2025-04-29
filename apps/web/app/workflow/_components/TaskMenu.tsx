@@ -13,7 +13,7 @@ import React from "react";
 export default function TaskMenu() {
   return (
     <aside className="w-[340px] min-w-[340px] max-w-[340px] px-4 h-full bg-white border-l border-gray-300 dark:bg-background p-2 overflow-auto">
-      <Accordion type="multiple" className="w-full" defaultValue={["interaction", "extraction"]}>
+      <Accordion type="multiple" className="w-full" defaultValue={["interaction", "extraction", "timing", "result"]}>
         <AccordionItem value="interaction">
           <AccordionTrigger className="text-lg font-semibold">
             User Interactions
@@ -37,8 +37,15 @@ export default function TaskMenu() {
               Timing controls
           </AccordionTrigger>
           <AccordionContent className="flex flex-col gap-2">
-            <TaskMenuBtn taskType={TaskType.PAGE_TO_HTML} />
-            <TaskMenuBtn taskType={TaskType.EXTRACT_TEXT_FROM_ELEMENT} />
+            <TaskMenuBtn taskType={TaskType.WAIT_FOR_ELEMENT} />
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="result">
+          <AccordionTrigger className="text-lg font-semibold">
+              Result Delivery
+          </AccordionTrigger>
+          <AccordionContent className="flex flex-col gap-2">
+            <TaskMenuBtn taskType={TaskType.DELIVER_VIA_WEBHOOK} />
           </AccordionContent>
         </AccordionItem>
       </Accordion>
