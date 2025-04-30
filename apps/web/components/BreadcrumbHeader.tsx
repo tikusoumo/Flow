@@ -6,8 +6,10 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
+  BreadcrumbSeparator,
 } from "./ui/breadcrumb";
 import { MobileSidebar } from "./Sidebar";
+import { ArrowRight } from "lucide-react";
 
 
 export default function BreadcrumbHeader() {
@@ -25,6 +27,9 @@ export default function BreadcrumbHeader() {
                   {path === "" ? "Home" : path}
                 </BreadcrumbLink>
               </BreadcrumbItem>
+              {index < paths.length - 1 && (
+               <BreadcrumbSeparator/>
+              )}
             </React.Fragment>
           ))}
           

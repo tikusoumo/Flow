@@ -9,7 +9,7 @@ import WorkFlowCard from "./_components/WorkFlowCard";
 export default function page() {
   return (
     <div>
-      <div className="flex h-full flex-col flex-1 px-4">
+      <div className="flex h-full flex-col flex-1">
         <div className="flex justify-between items-center">
           <div className="flex flex-col">
             <h1 className="text-2xl font-bold">Workflows</h1>
@@ -18,7 +18,7 @@ export default function page() {
           <CreateWorkflowDialog triggerText="Create Workflow" />
         </div>
       </div>
-      <div className="h-full py-6">
+      <div className="h-full py-4">
         <Suspense fallback={<UserWorkflowsSkeleton />}>
           <UserWorkflows />
         </Suspense>
@@ -42,7 +42,7 @@ async function UserWorkflows() {
 
   if (!workflows) {
     return (
-      <div className="flex items-center justify-center h-full p-4">
+      <div className="flex items-center justify-center h-full">
         <Alert variant={"destructive"}>
           <AlertCircle className="w-4 h-4" />
           <AlertTitle>Error</AlertTitle>
@@ -71,7 +71,7 @@ async function UserWorkflows() {
     );
   }
   return (
-    <div className="grid grid-cols-1 gap-4 px-4">
+    <div className="grid grid-cols-1 gap-4 ">
       {workflows.map((workflow) => (
        <WorkFlowCard
           key={workflow.id}
