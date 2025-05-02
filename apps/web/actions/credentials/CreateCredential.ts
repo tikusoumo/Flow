@@ -1,5 +1,6 @@
 "use server"
 
+import { symmetricEncrypt } from "@/lib/encryption";
 import prisma from "@/lib/prisma";
 import { CreateCredentialSchema, CreateCredentialSchemaType } from "@/schema/credentials"
 import { auth } from "@clerk/nextjs/server"
@@ -20,12 +21,17 @@ export async function CreateCredentials(form: CreateCredentialSchemaType) {
 
     //Encrypt value
     const encryptedValue = symmetricEncrypt(data.value);
+    
+    // Convert encrypted object to JSON string for storage
 
-
+    const encryptedValueString = JSON.stringify(encryptedValue);
+    
+   
+    
     const result = await prisma.credential.create({
         data: {
             name: data.name,
-            value: encryptedValue,
+            value: encryptedValueString,
             userId: userId,
         },
     })

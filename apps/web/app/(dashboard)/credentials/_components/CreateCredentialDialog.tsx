@@ -39,6 +39,8 @@ export default function CreateCredentialDialog({
     mutationFn: CreateCredentials,
     onSuccess: () => {
       toast.success("Credential created successfully", { id: "create-credential" });
+      form.reset();
+      setOpen(false);
     },
     onError: (error) => {
       // If error contains redirect info, it's actually successful
@@ -126,7 +128,7 @@ export default function CreateCredentialDialog({
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full" disabled={isPending}>
+                <Button type="submit" className="w-full" disabled={isPending} >
                   {!isPending && "Proceed"}
                   {isPending && <Loader2 className="animate-spin" />}
                 </Button>
