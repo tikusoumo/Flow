@@ -1,13 +1,13 @@
 import { TaskParamType, TaskType } from "@/types/task";
 import { WorkflowTask } from "@/types/workflow";
-import { Code, LucideProps } from "lucide-react";
+import { Link2Icon } from "lucide-react";
 
-export const PageToHtmlTask 
+export const NavigateToUrlTask 
  = {
-  type: TaskType.PAGE_TO_HTML,
-  label: "Get HTML from Page",
-  icon: (props: LucideProps) => (
-    <Code className="stroke-pink-400" {...props} />
+  type: TaskType.NAVIGATE_TO_URL,
+  label: "Navigate to URL",
+  icon: (props) => (
+    <Link2Icon className="stroke-orange-400" {...props} />
   ),
   isEntryPoint: false,
   credits: 2,
@@ -18,12 +18,15 @@ export const PageToHtmlTask
       required: true,
       
     },
+    {
+      name: "URL",
+      type: TaskParamType.STRING,
+      required: true,
+      
+    },
   ] as const,
     outputs: [
-        {
-        name: "HTML",
-        type: TaskParamType.STRING
-        },
+        
         {
             name: "Web Page",
             type: TaskParamType.BROWSER_INSTANCE

@@ -12,7 +12,7 @@ export default function page() {
       <div className="flex h-full flex-col flex-1">
         <div className="flex justify-between items-center">
           <div className="flex flex-col">
-            <h1 className="text-2xl font-bold">Workflows</h1>
+            <h1 className="text-3xl font-bold">Workflows</h1>
             <p className="text-muted-foreground">Manage your workflows</p>
           </div>
           <CreateWorkflowDialog triggerText="Create Workflow" />

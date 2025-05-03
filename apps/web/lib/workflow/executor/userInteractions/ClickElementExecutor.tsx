@@ -1,5 +1,5 @@
 import { ExecutionEnvironment } from "@/types/executor";
-import { ClickElementTask } from "../task/ClickElement";
+import { ClickElementTask } from "../../task/userInteractions/ClickElement";
 
 export async function ClickElementExecutor(
   environment: ExecutionEnvironment<typeof ClickElementTask>

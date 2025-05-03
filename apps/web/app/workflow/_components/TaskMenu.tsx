@@ -5,15 +5,17 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TaskRegistry } from "@/lib/workflow/task/registry";
 import { TaskType } from "@/types/task";
+import { CoinsIcon } from "lucide-react";
 import React from "react";
 
 export default function TaskMenu() {
   return (
     <aside className="w-[340px] min-w-[340px] max-w-[340px] px-4 h-full bg-white border-l border-gray-300 dark:bg-background p-2 overflow-auto">
-      <Accordion type="multiple" className="w-full" defaultValue={["interaction", "extraction", "timing", "result"]}>
+      <Accordion type="multiple" className="w-full" defaultValue={["interaction", "extraction", "timing", "result", "storage"]}>
         <AccordionItem value="interaction">
           <AccordionTrigger className="text-lg font-semibold">
             User Interactions
@@ -21,6 +23,8 @@ export default function TaskMenu() {
           <AccordionContent className="flex flex-col gap-2">
             <TaskMenuBtn taskType={TaskType.FILL_INPUT} />
             <TaskMenuBtn taskType={TaskType.CLICK_ELEMENT} />
+            <TaskMenuBtn taskType={TaskType.NAVIGATE_TO_URL} />
+            <TaskMenuBtn taskType={TaskType.SCROLL_TO_ELEMENT} />
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="extraction">
@@ -31,6 +35,15 @@ export default function TaskMenu() {
             <TaskMenuBtn taskType={TaskType.PAGE_TO_HTML} />
             <TaskMenuBtn taskType={TaskType.EXTRACT_TEXT_FROM_ELEMENT} />
             <TaskMenuBtn taskType={TaskType.EXTRACT_DATA_WITH_AI} />
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="storage">
+          <AccordionTrigger className="text-lg font-semibold">
+              Data Storage 
+          </AccordionTrigger>
+          <AccordionContent className="flex flex-col gap-2">
+            <TaskMenuBtn taskType={TaskType.READ_PROPERTY_FROM_JSON} />
+            <TaskMenuBtn taskType={TaskType.ADD_PROPERTY_TO_JSON} />
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="timing">
@@ -68,10 +81,14 @@ function TaskMenuBtn({ taskType }: { taskType: TaskType }) {
       draggable
       onDragStart={(event) => onDragStart(event, taskType)}
     >
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 justify-between">
         <task.icon size={20} />
         {task.label}
       </div>
+        <Badge variant="outline" className="text-xs font-normal">
+          <CoinsIcon className="w-4 h-4" />
+          {task.credits} 
+        </Badge>
     </Button>
   );
 }

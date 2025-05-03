@@ -1,5 +1,5 @@
 import { ExecutionEnvironment } from "@/types/executor";
-import { PageToHtmlTask } from "../task/PageToHtml";
+import { PageToHtmlTask } from "../task/dataExtraction/PageToHtml";
 
 export async function PageToHtmlExecutor(
   environment: ExecutionEnvironment<typeof PageToHtmlTask>

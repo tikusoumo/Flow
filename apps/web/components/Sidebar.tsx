@@ -19,22 +19,22 @@ import UserAvailableCreditsBadge from "./UserAvailableCreditsBadge";
 
 const routes = [
   {
-    href: "",
+    href: "/",
     label: "Home",
     icon: HomeIcon,
   },
   {
-    href: "workflows",
+    href: "/workflows",
     label: "Workflows",
     icon: Layers2Icon,
   },
   {
-    href: "credentials",
+    href: "/credentials",
     label: "Credentials",
     icon: ShieldCheckIcon,
   },
   {
-    href: "billing",
+    href: "/billing",
     label: "Billing",
     icon: CoinsIcon,
   },
@@ -42,10 +42,17 @@ const routes = [
 
 export default function DesktopSidebar() {
   const pathname = usePathname();
-  const activeRoute =
-    routes.find(
-      (route) => route.href.length > 0 && pathname.includes(route.href)
-    ) || routes[0];
+  
+  // Find the best match based on path segments
+  let activeRoute = routes[0]; // Default to Home
+  // Find the active route by checking which route matches the current path
+  const active = routes.find(
+    (route) =>
+      (route.href === "/" && pathname === "/") ||
+      (route.href !== "/" && pathname.startsWith(route.href))
+  );
+  activeRoute = active || routes[0];
+       
   return (
     <div className="hidden lg:flex flex-col w-[250px] bg-background shadow-lg h-screen p-4 border-r">
       <span className="text-2xl font-bold  mb-4">
