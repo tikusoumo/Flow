@@ -9,7 +9,6 @@ import {
   BreadcrumbSeparator,
 } from "./ui/breadcrumb";
 import { MobileSidebar } from "./Sidebar";
-import { ArrowRight } from "lucide-react";
 
 
 export default function BreadcrumbHeader() {

@@ -4,7 +4,9 @@ import { auth } from '@clerk/nextjs/server';
 import React from 'react'
 import Editor from '../../_components/Editor';
 
-export default async function page({params}: {params: {workflowId: string}}) {
+type Params = Promise<{workflowId: string}>
+
+export default async function page({params}: {params: Params}) {
     const { workflowId } = await params;
     const { userId } = await auth();
     if (!userId) {
