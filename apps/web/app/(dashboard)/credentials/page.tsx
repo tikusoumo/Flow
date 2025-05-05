@@ -6,7 +6,6 @@ import { LockIcon, ShieldIcon, ShieldOffIcon } from "lucide-react";
 import React, { Suspense } from "react";
 import CreateCredentialDialog from "./_components/CreateCredentialDialog";
 import DeleteCredentialDialog from "./_components/DeleteCredentialDialog";
-// Import the Credential type from Prisma Client
 import { Credential } from "@prisma/client";
 
 export default function CredentialsPage() {
@@ -64,7 +63,7 @@ async function UserCredetials() {
     <div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {/* Add the type annotation here */}
-        {credentials.map((credential: Credential) => (
+        {credentials.map((credential : Credential) => (
           <Card key={credential.id} className="w-full p-4">
             <div className="flex flex-co items-center justify-between p-4 space-x-4">
               <div className="flex items-center justify-center w-20 h-20 rounded-full bg-secondary">
