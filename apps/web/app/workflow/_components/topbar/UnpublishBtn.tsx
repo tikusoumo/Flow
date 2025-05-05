@@ -1,6 +1,6 @@
 "use client";
 
-import { UnpublishWorkflow } from "@/actions/Workflows/UnpublishWorkflow";
+import { UnpublishWorkflow } from "@/actions/workflows/UnpublishWorkflow";
 // Removed UpdateWorkflow import
 import { Button } from "@/components/ui/button";
 import { useMutation } from "@tanstack/react-query";

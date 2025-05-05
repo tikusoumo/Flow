@@ -1,5 +1,5 @@
 "use client";
-import DeleteWorkflow from "@/actions/Workflows/DeleteWorkflow";
+import DeleteWorkflow from "@/actions/workflows/DeleteWorkflow";
 import {
   AlertDialog,
   AlertDialogContent,

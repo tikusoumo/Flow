@@ -1,4 +1,4 @@
-import { GetWorkflowExecutions } from "@/actions/Workflows/GetWorkflowExecutions";
+import { GetWorkflowExecutions } from "@/actions/workflows/GetWorkflowExecutions";
 import TopBar from "../../_components/topbar/TopBar";
 import { Suspense } from "react";
 import { InboxIcon, Loader2Icon } from "lucide-react";

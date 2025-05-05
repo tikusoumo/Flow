@@ -1,6 +1,6 @@
 "use client"
 
-import { RunWorkflow } from '@/actions/Workflows/RunWorkflow'
+import { RunWorkflow } from '@/actions/workflows/RunWorkflow'
 import { Button } from '@/components/ui/button'
 import { useMutation } from '@tanstack/react-query'
 import { PlayIcon } from 'lucide-react'

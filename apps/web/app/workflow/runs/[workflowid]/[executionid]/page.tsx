@@ -1,4 +1,4 @@
-import { GetWorkflowExecutionWithPhases } from "@/actions/Workflows/GetWorkflowExecutionWithPhases";
+import { GetWorkflowExecutionWithPhases } from "@/actions/workflows/GetWorkflowExecutionWithPhases";
 import TopBar from "@/app/workflow/_components/topbar/TopBar";
 
 import { LoaderCircle } from "lucide-react";
