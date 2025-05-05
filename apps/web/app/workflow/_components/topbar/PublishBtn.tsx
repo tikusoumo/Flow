@@ -1,7 +1,7 @@
 "use client";
 
-import { PublishWorkflow } from "@/actions/workflows/PublishWorkflow";
-import { UpdateWorkflow } from "@/actions/workflows/UpdateWorkflows"; // Import the UpdateWorkflow action
+import { PublishWorkflow } from "@/actions/Workflows/PublishWorkflow";
+import { UpdateWorkflow } from "@/actions/Workflows/UpdateWorkflows"; // Import the UpdateWorkflow action
 import { Button } from "@/components/ui/button";
 import useExecutionPlan from "@/hooks/useExecutionPlan";
 import { useMutation } from "@tanstack/react-query";

@@ -13,11 +13,11 @@ import { cn } from "@/lib/utils";
 import CustomDialogHeader from "@/components/CustomDialogHeader";
 import { Input } from "@/components/ui/input";
 import { useMutation } from "@tanstack/react-query";
-import { UpdateWorkflowCron } from "@/actions/workflows/UpdateWorkflowCron";
+import { UpdateWorkflowCron } from "@/actions/Workflows/UpdateWorkflowCron";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import cronstrue from "cronstrue";
-import { DeleteWorkflowSchedule } from "@/actions/workflows/DeleteWorkflowSchedule";
+import { DeleteWorkflowSchedule } from "@/actions/Workflows/DeleteWorkflowSchedule";
 import { Separator } from "@/components/ui/separator";
 
 export default function SchedulerDialog(props: {

@@ -30,7 +30,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { DuplicateWorkflow } from "@/actions/workflows/DublicateWorkflow";
+import { DuplicateWorkflow } from "@/actions/Workflows/DublicateWorkflow";
 import { cn } from "@/lib/utils";
 
 export default function DuplicateWorkflowDialog({

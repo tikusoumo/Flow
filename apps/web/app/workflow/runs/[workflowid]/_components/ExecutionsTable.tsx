@@ -1,5 +1,5 @@
 "use client";
-import { GetWorkflowExecutions } from "@/actions/workflows/GetWorkflowExecutions";
+import { GetWorkflowExecutions } from "@/actions/Workflows/GetWorkflowExecutions";
 import { Badge } from "@/components/ui/badge";
 import {
   Table,

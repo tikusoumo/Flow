@@ -1,5 +1,5 @@
 "use client";
-import { GetWorkflowExecutionWithPhases } from "@/actions/workflows/GetWorkflowExecutionWithPhases";
+import { GetWorkflowExecutionWithPhases } from "@/actions/Workflows/GetWorkflowExecutionWithPhases";
 import {
   ExecutionPhaseStatus,
   WorkflowExecutionStatus,
@@ -21,7 +21,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DatesToDurationString } from "@/lib/helper/dates";
 import { GetPhaseTotalCost } from "@/lib/helper/phases";
-import { GetWorkflowPhaseDetails } from "@/actions/workflows/GetWorkflowPhaseDetails.";
+import { GetWorkflowPhaseDetails } from "@/actions/Workflows/GetWorkflowPhaseDetails.";
 import {
   Card,
   CardContent,
