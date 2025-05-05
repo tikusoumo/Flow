@@ -1,5 +1,6 @@
 import { ExecutionEnvironment } from "@/types/executor";
-import { NavigateToUrlTask } from "../task/NavigateToUrl";
+import { NavigateToUrlTask } from "../../task/userInteractions/NavigateToUrl";
+
 
 export async function NavigateToUrlExecutor(
   environment: ExecutionEnvironment<typeof NavigateToUrlTask>

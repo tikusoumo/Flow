@@ -1,5 +1,5 @@
 import { ExecutionEnvironment } from "@/types/executor";
-import { WaitForElementTask } from "../task/timingControl/WaitForElement";
+import { WaitForElementTask } from "../../task/timingControl/WaitForElement";
 
 export async function WaitForElementExecutor(
   environment: ExecutionEnvironment<typeof WaitForElementTask>

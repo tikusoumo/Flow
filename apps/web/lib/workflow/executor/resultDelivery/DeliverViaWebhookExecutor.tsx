@@ -1,5 +1,5 @@
 import { ExecutionEnvironment } from "@/types/executor";
-import { DeliverViaWebhookTask } from "../task/DeliverViaWebhook";
+import { DeliverViaWebhookTask } from "../../task/resultDelivery/DeliverViaWebhook";
 
 export async function DeliverViaWebhookExecutor(
   environment: ExecutionEnvironment<typeof DeliverViaWebhookTask>

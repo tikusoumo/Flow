@@ -4,7 +4,8 @@ import { Suspense } from "react";
 import { InboxIcon, Loader2Icon } from "lucide-react";
 import ExecutionsTable from "./_components/ExecutionsTable";
 
-export default function page({ params }: { params: { workflowid: string } }) {
+export default async function page(props: { params: Promise<{ workflowid: string }> }) {
+  const params = await props.params;
 
   return (
     <div className="h-full w-full overflow-auto">
@@ -13,6 +14,7 @@ export default function page({ params }: { params: { workflowid: string } }) {
         subtitle="View all runs for this workflow"
         workflowId={params.workflowid}
         hideButtons
+        initialDefinition={""}
       />
       <Suspense
         fallback={

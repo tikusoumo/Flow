@@ -1,5 +1,5 @@
 import { ExecutionEnvironment } from "@/types/executor";
-import { FillInputTask } from "../task/FillInput";
+import { FillInputTask } from "../../task/userInteractions/FillInput";
 
 export async function FillInputExecutor(
   environment: ExecutionEnvironment<typeof FillInputTask>

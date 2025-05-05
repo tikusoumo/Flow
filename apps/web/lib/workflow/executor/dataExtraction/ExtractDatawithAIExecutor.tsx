@@ -1,8 +1,8 @@
 import { ExecutionEnvironment } from "@/types/executor";
-import { ExtractDataWithAITask } from "../task/dataExtraction/ExtractDataWithAI";
 import prisma from "@/lib/prisma";
 import { symmetricDecrypt } from "@/lib/encryption";
 import Openai from "openai";
+import { ExtractDataWithAITask } from "../../task/dataExtraction/ExtractDataWithAI";
 
 export async function ExtractDataWithAIExecutor(
   environment: ExecutionEnvironment<typeof ExtractDataWithAITask>

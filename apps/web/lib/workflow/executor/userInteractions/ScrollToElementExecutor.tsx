@@ -1,5 +1,5 @@
 import { ExecutionEnvironment } from "@/types/executor";
-import { ScrollToElementTask } from "../task/ScrollToElement";
+import { ScrollToElementTask } from "../../task/userInteractions/ScrollToElement";
 
 export async function ScrollToElementExecutor(
   environment: ExecutionEnvironment<typeof ScrollToElementTask>
