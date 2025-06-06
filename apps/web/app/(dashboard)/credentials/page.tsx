@@ -2,7 +2,7 @@ import { GetCredentialsForUser } from "@/actions/credentials/GetCredentialsForUs
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { LockIcon, ShieldIcon, ShieldOffIcon } from "lucide-react";
+import { Lock, Shield, ShieldOff,  } from "lucide-react";
 import React, { Suspense } from "react";
 import CreateCredentialDialog from "./_components/CreateCredentialDialog";
 import DeleteCredentialDialog from "./_components/DeleteCredentialDialog";
@@ -20,7 +20,7 @@ export default function CredentialsPage() {
       </div>
       <div className="h-full py-6 space-y-8">
         <Alert>
-          <ShieldIcon className="h-4 w-4 stroke-primary" />
+          <Shield className="h-4 w-4 stroke-primary" />
           <AlertTitle className="text-primary">Encryption</AlertTitle>
           <AlertDescription>
             Your credentials are encrypted using a secure algorithm. Make sure
@@ -46,7 +46,7 @@ async function UserCredetials() {
       <Card className="w-full p-4">
         <div className="flex flex-col items-center justify-between p-4 space-x-4">
           <div className="flex items-center justify-center w-20 h-20 rounded-full bg-secondary">
-            <ShieldOffIcon size={40} className="stroke-primary" />
+            <ShieldOff size={40} className="stroke-primary" />
           </div>
           <div className="flex flex-col gap-2 text-center">
             <p className="text-bold">No credentials created yet</p>
@@ -67,7 +67,7 @@ async function UserCredetials() {
           <Card key={credential.id} className="w-full p-4">
             <div className="flex flex-co items-center justify-between p-4 space-x-4">
               <div className="flex items-center justify-center w-20 h-20 rounded-full bg-secondary">
-                <LockIcon size={40} className="stroke-primary" />
+                <Lock size={40} className="stroke-primary" />
               </div>
               <div className="flex flex-col gap-1 text-c">
                 
@@ -86,6 +86,7 @@ async function UserCredetials() {
             </div>
           </Card>
         ))}
+        
       </div>
     </div>
   );
