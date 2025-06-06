@@ -169,7 +169,7 @@ export default function ExecutionViewer({
       <div className="flex w-full h-full px-4">
         {isRunning && (
           <div className="flex items-center justify-center flex-col gap-2 w-full h-full">
-            <div className="font-bold"></div>
+            <div className="font-bold">Running phases</div>
           </div>
         )}
         {!isRunning && !selectedPhase && (
