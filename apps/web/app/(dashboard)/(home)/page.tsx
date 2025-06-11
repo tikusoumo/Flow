@@ -3,11 +3,13 @@ import React, { Suspense } from "react";
 import PeriodSelector from "./_component/PeriodSelector";
 import { Period } from "@/types/analytics";
 import { Skeleton } from "@/components/ui/skeleton";
+import { GetStatsCardValues } from "@/actions/analytics/GetStatsCardValues";
+import StatsCard from "./_component/StatsCard";
 
 export default async function page({
   searchParams,
 }: {
-  searchParams: { month?: string; year?: string };
+  searchParams: Promise<{ month?: string; year?: string }>;
 }) {
   const currentDate = new Date();
   const { month, year } = await searchParams;
@@ -26,6 +28,7 @@ export default async function page({
           <PeriodSelectorWrapper selectedPeriod={period} />
         </Suspense>
       </div>
+      <StatsCards selectedPeriod={period} />
     </div>
   );
 }
@@ -38,4 +41,11 @@ async function PeriodSelectorWrapper({
   const periods = await GetPeriods();
 
   return <PeriodSelector selectedPeriod={selectedPeriod} periods={periods} />;
+}
+
+async function StatsCards({ selectedPeriod }: { selectedPeriod: Period }) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const stats = await GetStatsCardValues(selectedPeriod);
+
+  return <StatsCard  />;
 }

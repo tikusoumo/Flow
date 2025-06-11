@@ -47,7 +47,7 @@ export default function NodeHeader({ taskType,nodeId }: { taskType: TaskType ; n
             addNodes([newNode]);
           }}
           >
-            <CopyIcon size={12} className="text-black" />
+            <CopyIcon size={12} className="text-black dark:text-white" />
           </Button>
           </>}
           <Button
