@@ -102,5 +102,5 @@ async function StatsExecutionStatus({
 
   const stats = await GetWorkflowExecutionStats(selectedPeriod);
 
-  return <ExecutionStatusChart stats={stats} selectedPeriod={selectedPeriod} />;
+  return <ExecutionStatusChart stats={stats}  />;
 }
