@@ -5,6 +5,9 @@ import { Period } from "@/types/analytics";
 import { Skeleton } from "@/components/ui/skeleton";
 import { GetStatsCardValues } from "@/actions/analytics/GetStatsCardValues";
 import StatsCard from "./_component/StatsCard";
+import { CirclePlay, Coins, LucideWaypoints } from "lucide-react";
+import GetWorkflowExecutionStats from "@/actions/analytics/GetWorkflowExecutionStats";
+import ExecutionStatusChart from "./_component/ExecutionStatusChart";
 
 export default async function page({
   searchParams,
@@ -28,7 +31,16 @@ export default async function page({
           <PeriodSelectorWrapper selectedPeriod={period} />
         </Suspense>
       </div>
-      <StatsCards selectedPeriod={period} />
+      <div className="py-6 h-full flex flex-col gap-4">
+        <Suspense fallback={<StatsCardSkeleton />}>
+          <StatsCards selectedPeriod={period} />
+        </Suspense>
+        <Suspense fallback={<Skeleton className="h-12 w-full" />}>
+          <StatsExecutionStatus
+            selectedPeriod={period}
+          />
+        </Suspense>
+      </div>
     </div>
   );
 }
@@ -47,5 +59,48 @@ async function StatsCards({ selectedPeriod }: { selectedPeriod: Period }) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const stats = await GetStatsCardValues(selectedPeriod);
 
-  return <StatsCard  />;
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 min-h-[120px]">
+      <StatsCard
+        title="Workflow Executions"
+        value={stats.workflowExecutions}
+        icons={CirclePlay}
+      />
+      <StatsCard
+        title="Phase Executions"
+        value={stats.phaseExecutions}
+        icons={LucideWaypoints}
+      />
+      <StatsCard
+        title="Credit Consumed"
+        value={stats.creditsComsumed}
+        icons={Coins}
+      />
+    </div>
+  );
+}
+
+function StatsCardSkeleton() {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 min-h-[120px]">
+      {Array.from({ length: 3 }).map((_, index) => (
+        <div key={index} className="flex flex-col gap-4">
+          <Skeleton className="h-6 w-[150px]" />
+          <Skeleton className="h-12 w-full" />
+        </div>
+      ))}
+   
+      
+    </div>
+  );
+}
+async function StatsExecutionStatus({
+  selectedPeriod,
+}: {
+  selectedPeriod: Period;
+}) {
+
+  const stats = await GetWorkflowExecutionStats(selectedPeriod);
+
+  return <ExecutionStatusChart stats={stats} selectedPeriod={selectedPeriod} />;
 }

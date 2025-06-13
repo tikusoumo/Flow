@@ -43,7 +43,7 @@ async function UserCredetials() {
   }
   if (credentials.length === 0) {
     return (
-      <Card className="w-full p-4">
+      <Card className="w-full p-4 bg-gradient-to-t">
         <div className="flex flex-col items-center justify-between p-4 space-x-4">
           <div className="flex items-center justify-center w-20 h-20 rounded-full bg-secondary">
             <ShieldOff size={40} className="stroke-primary" />
@@ -64,17 +64,15 @@ async function UserCredetials() {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {/* Add the type annotation here */}
         {credentials.map((credential : Credential) => (
-          <Card key={credential.id} className="w-full p-4">
+          <Card key={credential.id} className="w-full p-4 bg-gradient-to-t from-background to-primary/10 hover:to-primary/0 shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out cursor-pointer">
             <div className="flex flex-co items-center justify-between p-4 space-x-4">
-              <div className="flex items-center justify-center w-20 h-20 rounded-full bg-secondary">
-                <Lock size={40} className="stroke-primary" />
-              </div>
+                <Lock size={80} className="stroke-primary/80 " />
               <div className="flex flex-col gap-1 text-c">
                 
                 <div className="flex flex-col gap-1 ">
-                  <p className="text-bold">{credential.name}</p>
+                  <p className="font-bold">{credential.name}</p>
                   <p className="text-sm text-muted-foreground">
-                    click here to delete your credentials
+                    Click here to delete your credentials
                   </p>
                  
                 </div>

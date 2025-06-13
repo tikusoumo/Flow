@@ -16,11 +16,11 @@ export default function UserAvailableCreditsBadge() {
   });
 
   return (
-    <Link href={"/billing"} className={cn("w-full  items-center", buttonVariants({ variant: "outline" }))}>
+    <Link href={"/billing"} className={cn("w-full items-center", buttonVariants({ variant: "outline" }))}>
       <CoinsIcon className="h-4 w-4 text-primary" />
       <span className="font-semibold capitalize">
         {query.isLoading && <Loader2Icon className="animate-spin" />}
-        {!query.isLoading && query.data && <ReactCountupWrapper value={query.data} />}
+        {!query.isLoading && query.data !== undefined && <ReactCountupWrapper value={query.data} />}
         {!query.isLoading && query.data === undefined && "-"}
       </span>
     </Link>

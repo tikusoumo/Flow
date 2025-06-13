@@ -31,7 +31,7 @@ export default function TopBar({
 }: TopBarProps) {
   const router = useRouter();
   return (
-    <header className="flex justify-between   w-full h-[60px] p-1 bg-background border-p-2 border-separate shadow-sm sticky top-0 z-10">
+    <header className="flex justify-between   w-full h-[60px] p-1 bg-background border-p-2 border-separate shadow-sm sticky top-0 z-10 border-b-1">
       <div className="flex gap-1">
         <TooltipWrapper content="Back">
           <Button variant={"ghost"} size={"icon"} onClick={() => router.back()}>

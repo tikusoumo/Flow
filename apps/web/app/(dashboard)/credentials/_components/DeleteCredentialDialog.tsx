@@ -36,7 +36,7 @@ export default function DeleteCredentialDialog({
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button variant="outline" className="w-full hover:bg-destructive font-bold hover:text-white transition-all duration-200  bg-destructive/50 " onClick={() => setOpen(true)}>
+        <Button variant="outline" className="w-full hover:bg-destructive font-bold hover:text-white transition-all duration-200  bg-primary/50 " onClick={() => setOpen(true)}>
 
            {  "Delete"}
         </Button>
