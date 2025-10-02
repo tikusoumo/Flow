@@ -118,6 +118,7 @@
    .dark .react-flow__controls-button svg {
     fill: hsl(var(--foreground)) !important;
   }
+  
   .react-flow__attribution {
     display: none !important;
   }

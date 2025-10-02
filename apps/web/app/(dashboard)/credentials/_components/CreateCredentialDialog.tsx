@@ -33,6 +33,12 @@ export default function CreateCredentialDialog({
   const [open, setOpen] = useState(false);
   const form = useForm<CreateCredentialSchemaType>({
     resolver: zodResolver(CreateCredentialSchema),
+    
+    defaultValues: {
+      name: "",
+      value: "",
+    },
+    mode: "onChange",
   });
 
   const { mutate, isPending } = useMutation({

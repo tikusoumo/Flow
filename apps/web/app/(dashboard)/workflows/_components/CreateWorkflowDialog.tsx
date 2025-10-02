@@ -35,7 +35,10 @@ export default function CreateWorkflowDialog({
   const [open, setOpen] = useState(false);
   const form = useForm<CreateWorkflowSchemaType>({
     resolver: zodResolver(CreateWorkflowSchema),
-    defaultValues: {},
+    defaultValues: {
+      name: "",
+      description: "",
+    },
   });
 
   const { mutate, isPending } = useMutation({

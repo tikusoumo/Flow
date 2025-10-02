@@ -42,9 +42,10 @@ export default function DuplicateWorkflowDialog({
   const [open, setOpen] = useState(false);
   const form = useForm<DublicateWorkflowSchemaType>({
     resolver: zodResolver(DublicateWorkflowSchema),
-    // Set default values based on the original workflow
+    // Fix: Provide default values
     defaultValues: {
-      workflowId,
+      name: "",
+      description: "",
     },
   });
 
