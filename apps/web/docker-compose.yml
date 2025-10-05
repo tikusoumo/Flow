@@ -1,7 +1,29 @@
 services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: flow_web
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://Tiku:tiku1234@db:5432/FlowDB
+      - NEXT_PUBLIC_APP_URL=http://localhost:3000
+    depends_on:
+      - db
+    volumes:
+      - ./.env:/app/.env:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
   db:
     image: postgres:latest
-    container_name: postgres_flowdb_2
+    container_name: postgres_flowdb
     restart: always
     environment:
       POSTGRES_DB: FlowDB
@@ -12,12 +34,17 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  adminer:
-    image: adminer
-    container_name: adminer_flowdb_2
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_flowdb
     restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
     ports:
-      - "8080:8080"
+      - "5050:80"
+    depends_on:
+      - db
 
 volumes:
   postgres_data:

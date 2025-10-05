@@ -34,3 +34,44 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Docker Deployment
+
+This project can be deployed using Docker and Docker Compose.
+
+### Prerequisites
+- Docker installed on your system
+- Docker Compose installed
+
+### Running with Docker Compose
+
+1. Ensure you have the `.env` file configured with your environment variables.
+
+2. Build and start the containers:
+   ```bash
+   docker-compose up --build
+   ```
+
+3. To run in detached mode:
+   ```bash
+   docker-compose up -d --build
+   ```
+
+4. To stop the containers:
+   ```bash
+   docker-compose down
+   ```
+
+### Services
+- **Web**: Next.js application running on port 3000
+- **DB**: PostgreSQL database running on port 5432
+- **PgAdmin**: Database management tool running on port 5050
+
+### Environment Variables
+Make sure to set the following environment variables in your `.env` file:
+- `DATABASE_URL`: Connection string for PostgreSQL
+- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`: Clerk publishable key
+- `CLERK_SECRET_KEY`: Clerk secret key
+- Other required environment variables
+
+The Docker setup automatically uses the local PostgreSQL database from the `db` service.
